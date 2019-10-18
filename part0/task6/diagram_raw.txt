@@ -1,0 +1,23 @@
+note over browser:
+User writes something into the textfield
+and clicks submit button
+end note
+
+note over browser:
+JS-code adds the new note to notes array
+and forces browser to redraw the notes lists
+end note
+
+note over browser:
+JS-code sends the new note data
+to the server in JSON format
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+
+note over server:
+Server creates a new note object
+and adds it to the notes array
+end note
+
+server-->browser: HTML-code
