@@ -7,15 +7,18 @@ const Header = (props) => (
     </>
 );
 
+const Part = (props) => (
+  <>
+    <p>
+      {props.part} {props.exercises}
+    </p>
+  </>
+);
+
 const Content = (props) => {
   const items = [];
-  for (const [part, exercises] of props.elements.entries()) {
-    items.push(
-      <p>
-        {part} {exercises}
-      </p>
-    )
-  }
+  for (const [part, exercises] of props.elements.entries())
+    items.push(<Part part={part} exercises={exercises}/>);
 
   return(
     <>
@@ -42,7 +45,6 @@ const App = () => {
     [part2, exercises2],
     [part3, exercises3],
   ];
-
 
   return(
     <div>
