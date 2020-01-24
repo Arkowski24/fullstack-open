@@ -8,9 +8,10 @@ const SectionHeader = (props) => (
 );
 
 const FeedbackValue = (props) => (
-    <>
-        {props.buttonName} {props.buttonValue}<br/>
-    </>
+    <tr>
+        <td>{props.buttonName}</td>
+        <td>{props.buttonValue}</td>
+    </tr>
 );
 
 const Button = (props) => {
@@ -25,9 +26,10 @@ const Button = (props) => {
 const Statistic = (props) => {
     const fieldValue = props.evalFun(props.currentState);
     return (
-        <>
-            {props.fieldName} {fieldValue}<br/>
-        </>
+        <tr>
+            <td>{props.fieldName}</td>
+            <td>{fieldValue}</td>
+        </tr>
     )
 };
 
@@ -47,12 +49,16 @@ const Statistics = (props) => {
     return (
         <div>
             <SectionHeader message={"statistics"}/>
-            <FeedbackValue buttonName={"good"} buttonValue={props.currentState.good}/>
-            <FeedbackValue buttonName={"neutral"} buttonValue={props.currentState.neutral}/>
-            <FeedbackValue buttonName={"bad"} buttonValue={props.currentState.bad}/>
-            <Statistic fieldName={"sum"} evalFun={evalTotal} currentState={props.currentState}/>
-            <Statistic fieldName={"average"} evalFun={evalAverage} currentState={props.currentState}/>
-            <Statistic fieldName={"positive"} evalFun={evalPositive} currentState={props.currentState}/>
+            <table>
+                <tbody>
+                    <FeedbackValue buttonName={"good"} buttonValue={props.currentState.good}/>
+                    <FeedbackValue buttonName={"neutral"} buttonValue={props.currentState.neutral}/>
+                    <FeedbackValue buttonName={"bad"} buttonValue={props.currentState.bad}/>
+                    <Statistic fieldName={"sum"} evalFun={evalTotal} currentState={props.currentState}/>
+                    <Statistic fieldName={"average"} evalFun={evalAverage} currentState={props.currentState}/>
+                    <Statistic fieldName={"positive"} evalFun={evalPositive} currentState={props.currentState}/>
+                </tbody>
+            </table>
         </div>
     )
 };
