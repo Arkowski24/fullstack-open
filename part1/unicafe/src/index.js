@@ -13,7 +13,7 @@ const FeedbackValue = (props) => (
     </>
 );
 
-const FeedbackButton = (props) => {
+const Button = (props) => {
     const incrementButton = () => props.setFun(props.buttonValue + 1);
     return (
         <>
@@ -22,7 +22,7 @@ const FeedbackButton = (props) => {
     )
 };
 
-const EvaluationField = (props) => {
+const Statistic = (props) => {
     const fieldValue = props.evalFun(props.currentState);
     return (
         <>
@@ -50,9 +50,9 @@ const Statistics = (props) => {
             <FeedbackValue buttonName={"good"} buttonValue={props.currentState.good}/>
             <FeedbackValue buttonName={"neutral"} buttonValue={props.currentState.neutral}/>
             <FeedbackValue buttonName={"bad"} buttonValue={props.currentState.bad}/>
-            <EvaluationField fieldName={"sum"} evalFun={evalTotal} currentState={props.currentState}/>
-            <EvaluationField fieldName={"average"} evalFun={evalAverage} currentState={props.currentState}/>
-            <EvaluationField fieldName={"positive"} evalFun={evalPositive} currentState={props.currentState}/>
+            <Statistic fieldName={"sum"} evalFun={evalTotal} currentState={props.currentState}/>
+            <Statistic fieldName={"average"} evalFun={evalAverage} currentState={props.currentState}/>
+            <Statistic fieldName={"positive"} evalFun={evalPositive} currentState={props.currentState}/>
         </div>
     )
 };
@@ -67,9 +67,9 @@ const App = () => {
         <>
             <div>
                 <SectionHeader message={"give feedback"}/>
-                <FeedbackButton buttonName={"good"} buttonValue={good} setFun={setGood}/>
-                <FeedbackButton buttonName={"neutral"} buttonValue={neutral} setFun={setNeutral}/>
-                <FeedbackButton buttonName={"bad"} buttonValue={bad} setFun={setBad}/>
+                <Button buttonName={"good"} buttonValue={good} setFun={setGood}/>
+                <Button buttonName={"neutral"} buttonValue={neutral} setFun={setNeutral}/>
+                <Button buttonName={"bad"} buttonValue={bad} setFun={setBad}/>
             </div>
             <Statistics currentState={currentState}/>
         </>
