@@ -36,6 +36,14 @@ const Statistics = (props) => {
     const evalAverage = (cs) => (cs.good - cs.bad) / evalTotal(cs);
     const evalPositive = (cs) => cs.good / evalTotal(cs) * 100 + " %";
 
+    if (evalTotal(props.currentState) === 0)
+        return (
+            <div>
+                <SectionHeader message={"statistics"}/>
+                <p>No feedback given</p>
+            </div>
+        );
+
     return (
         <div>
             <SectionHeader message={"statistics"}/>
