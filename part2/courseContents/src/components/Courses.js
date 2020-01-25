@@ -32,4 +32,14 @@ const Course = ({course}) => (
     </div>
 );
 
-export default Course
+const Courses = ({courses}) => {
+    const coursesList = courses.map((course) => <Course course={course}/>);
+
+    return (
+        <div>
+            {coursesList}
+        </div>
+    )
+};
+
+export default Courses
