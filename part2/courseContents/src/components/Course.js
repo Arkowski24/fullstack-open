@@ -16,10 +16,19 @@ const Part = ({part}) => (
     </p>
 );
 
+const Total = ({parts}) => {
+    const calculateTotal = (parts) => parts.reduce((a, p) => a + p.exercises, 0);
+
+    return (
+        <b>total of {calculateTotal(parts)} exercises</b>
+    )
+};
+
 const Course = ({course}) => (
     <div>
         <Header title={course.name}/>
         <Content course={course}/>
+        <Total parts={course.parts}/>
     </div>
 );
 
