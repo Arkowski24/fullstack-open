@@ -9,8 +9,15 @@ const AddNumberForm = (props) => {
 
     const addName = (event) => {
         event.preventDefault();
-        const newPersons = persons.concat({name: newName});
-        setPersons(newPersons);
+        const isNotInserted = (persons.find(p => p.name === newName) === undefined);
+
+        if (isNotInserted) {
+            const newPersons = persons.concat({name: newName});
+            setPersons(newPersons);
+        } else {
+            const alertString = `${newName} is already added to phonebook`;
+            alert(alertString);
+        }
     };
 
     return (
