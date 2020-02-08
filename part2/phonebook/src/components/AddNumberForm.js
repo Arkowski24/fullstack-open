@@ -29,7 +29,7 @@ const AddNumberForm = (props) => {
 
     return (
         <>
-            <h2>Phonebook</h2>
+            <h2>add a new</h2>
             <form>
                 <div>
                     name: <input onChange={handleNameChange}/>

@@ -6,7 +6,15 @@ const Number = (props) =>
     </>;
 
 const Numbers = (props) => {
-    const numbers = props.people.map(person => <Number key={person.name} person={person}/>);
+    const filterPeople = () => {
+        if (props.searchField.length > 0) {
+            const searchQuery = props.searchField.toLowerCase();
+            return props.people.filter(person => person.name.toLowerCase().includes(searchQuery))
+        } else {
+            return props.people
+        }
+    };
+    const numbers = filterPeople().map(person => <Number key={person.name} person={person}/>);
 
     return (
         <>
