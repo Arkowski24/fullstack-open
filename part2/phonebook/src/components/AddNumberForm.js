@@ -1,18 +1,25 @@
-import React from "react";
+import React, {useState} from "react";
 
 const AddNumberForm = (props) => {
     const [persons, setPersons] = props.personsState;
-    const [newName, setNewName] = props.newNameState;
+    const [newName, setNewName] = useState('');
+    const [newNumber, setNewNumber] = useState('');
 
     const handleNameChange = (event) =>
         setNewName(event.target.value);
 
-    const addName = (event) => {
+    const handleNumberChange = (event) =>
+        setNewNumber(event.target.value);
+
+    const addNameAndNumber = (event) => {
         event.preventDefault();
         const isNotInserted = (persons.find(p => p.name === newName) === undefined);
 
         if (isNotInserted) {
-            const newPersons = persons.concat({name: newName});
+            const newPersons = persons.concat({
+                name: newName,
+                number: newNumber
+            });
             setPersons(newPersons);
         } else {
             const alertString = `${newName} is already added to phonebook`;
@@ -28,7 +35,10 @@ const AddNumberForm = (props) => {
                     name: <input onChange={handleNameChange}/>
                 </div>
                 <div>
-                    <button type="submit" onClick={addName}>add</button>
+                    number: <input onChange={handleNumberChange}/>
+                </div>
+                <div>
+                    <button type="submit" onClick={addNameAndNumber}>add</button>
                 </div>
             </form>
         </>

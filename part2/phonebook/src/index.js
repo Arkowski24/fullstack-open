@@ -5,13 +5,15 @@ import AddNumberForm from "./components/AddNumberForm";
 
 const App = () => {
     const personsState = useState(
-        [{name: 'Arto Hellas'}]
+        [{
+            name: 'Arto Hellas',
+            number: '040-1234567'
+        }]
     );
-    const newNameState = useState('');
 
     return (
         <div>
-            <AddNumberForm personsState={personsState} newNameState={newNameState}/>
+            <AddNumberForm personsState={personsState}/>
             <Numbers people={personsState[0]}/>
         </div>
     )

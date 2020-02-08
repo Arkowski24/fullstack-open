@@ -2,11 +2,11 @@ import React from "react";
 
 const Number = (props) =>
     <>
-        {props.name}<br/>
+        {`${props.person.name} ${props.person.number}`} <br/>
     </>;
 
 const Numbers = (props) => {
-    const numbers = props.people.map((person, index) => <Number key={person.name} name={person.name}/>);
+    const numbers = props.people.map(person => <Number key={person.name} person={person}/>);
 
     return (
         <>
