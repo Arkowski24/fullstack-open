@@ -1,9 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
 
 const AddNumberForm = (props) => {
     const [persons, setPersons] = props.personsState;
-    const [newName, setNewName] = useState('');
-    const [newNumber, setNewNumber] = useState('');
+    const [newName, setNewName] = props.newNameState;
+    const [newNumber, setNewNumber] = props.newNumberState;
 
     const handleNameChange = (event) =>
         setNewName(event.target.value);
@@ -29,7 +29,6 @@ const AddNumberForm = (props) => {
 
     return (
         <>
-            <h2>add a new</h2>
             <form>
                 <div>
                     name: <input onChange={handleNameChange}/>

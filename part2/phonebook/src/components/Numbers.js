@@ -18,7 +18,6 @@ const Numbers = (props) => {
 
     return (
         <>
-            <h2>Numbers</h2>
             {numbers}
         </>
     )
