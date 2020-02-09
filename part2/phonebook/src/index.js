@@ -1,19 +1,27 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import ReactDOM from 'react-dom'
 import Numbers from "./components/Numbers";
 import AddNumberForm from "./components/AddNumberForm";
 import SearchForm from "./components/SearchForm";
+import axios from 'axios'
 
 const App = () => {
-    const personsState = useState([
-        {name: 'Arto Hellas', number: '040-123456'},
-        {name: 'Ada Lovelace', number: '39-44-5323523'},
-        {name: 'Dan Abramov', number: '12-43-234345'},
-        {name: 'Mary Poppendieck', number: '39-23-6423122'}
-    ]);
+    const personsState = useState([]);
     const newNameState = useState('');
     const newNumberState = useState('');
     const [searchField, setSearchField] = useState('');
+    const setPersonsState = personsState[1];
+
+    useEffect(() => {
+            axios
+                .get('http://localhost:3001/persons')
+                .then(response => {
+                    const persons = response.data;
+                    setPersonsState(persons)
+                })
+        },
+        [setPersonsState]
+    );
 
     return (
         <div>
