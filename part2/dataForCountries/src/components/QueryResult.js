@@ -1,52 +1,8 @@
 import React, {useEffect} from 'react';
 import axios from 'axios'
-
-const TooManyCountries = () =>
-    <div>
-        Too many countries, specify another filter
-    </div>;
-
-const ListCountries = (props) => {
-    const countryNames = props.countryList.map(c =>
-        <div key={c.name}>
-            {`${c.name} `}
-            <button onClick={() => props.setInputCountry(c.name)}> show</button>
-        </div>
-    );
-
-    return (
-        <div>
-            {countryNames}
-        </div>
-    )
-};
-
-const ShowCountry = (props) => {
-    const countryName = props.country.name;
-    const languages = props.country.languages.map(l => <li key={l.iso639_1}>{l.name}</li>);
-
-    return (
-        <div>
-            <div>
-                <h2>{countryName}</h2>
-                <p>
-                    {`capital ${props.country.capital}`}<br/>
-                    {`population ${props.country.population}`}
-                </p>
-            </div>
-            <div>
-                <h2>languages</h2>
-                <ul>
-                    {languages}
-                </ul>
-            </div>
-            <di>
-                <img src={props.country.flag} alt={props.country.name} width={100}/>
-            </di>
-        </div>
-    )
-};
-
+import TooManyCountries from './queryResult/TooManyCountries'
+import ListCountries from "./queryResult/ListCountries";
+import ShowCountry from "./queryResult/ShowCountry";
 
 const QueryResult = (props) => {
     const [inputCountry, setInputCountry] = props.inputCountryState;
@@ -70,7 +26,7 @@ const QueryResult = (props) => {
         )
     } else if (countryList.length === 1) {
         return (
-            <ShowCountry country={countryList[0]}/>
+            <ShowCountry country={countryList[0]} weatherPredictionState={props.weatherPredictionState}/>
         )
     } else {
         return (

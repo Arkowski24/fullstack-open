@@ -6,11 +6,14 @@ import QueryResult from "./components/QueryResult";
 const App = () => {
     const inputCountryState = useState('');
     const countryListState = useState([]);
+    const weatherPredictionState = useState({});
 
     return (
         <div>
             <InputCountryField setInputCountry={inputCountryState[1]}/>
-            <QueryResult inputCountryState={inputCountryState} countryListState={countryListState}/>
+            <QueryResult inputCountryState={inputCountryState}
+                         countryListState={countryListState}
+                         weatherPredictionState={weatherPredictionState}/>
         </div>
     )
 };
