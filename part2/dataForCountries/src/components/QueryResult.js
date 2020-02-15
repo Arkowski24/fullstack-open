@@ -7,7 +7,12 @@ const TooManyCountries = () =>
     </div>;
 
 const ListCountries = (props) => {
-    const countryNames = props.countryList.map(c => <div key={c.name}>{c.name}</div>);
+    const countryNames = props.countryList.map(c =>
+        <div key={c.name}>
+            {`${c.name} `}
+            <button onClick={() => props.setInputCountry(c.name)}> show</button>
+        </div>
+    );
 
     return (
         <div>
@@ -44,15 +49,16 @@ const ShowCountry = (props) => {
 
 
 const QueryResult = (props) => {
+    const [inputCountry, setInputCountry] = props.inputCountryState;
     const [countryList, setCountryList] = props.countryListState;
 
     useEffect(() => {
-        if (props.inputCountry.length === 0) return;
+        if (inputCountry.length === 0) return;
         axios
-            .get(`https://restcountries.eu/rest/v2/name/${props.inputCountry}`)
+            .get(`https://restcountries.eu/rest/v2/name/${inputCountry}`)
             .then(result => setCountryList(result.data))
             .catch(() => [])
-    }, [props.inputCountry, setCountryList]);
+    }, [inputCountry, setCountryList]);
 
     if (countryList.length > 10) {
         return (
@@ -60,7 +66,7 @@ const QueryResult = (props) => {
         )
     } else if (countryList.length > 1) {
         return (
-            <ListCountries countryList={countryList}/>
+            <ListCountries countryList={countryList} setInputCountry={setInputCountry}/>
         )
     } else if (countryList.length === 1) {
         return (

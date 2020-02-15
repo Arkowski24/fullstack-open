@@ -4,13 +4,13 @@ import InputCountryField from "./components/InputField";
 import QueryResult from "./components/QueryResult";
 
 const App = () => {
-    const [inputCountry, setInputCountry] = useState('');
+    const inputCountryState = useState('');
     const countryListState = useState([]);
 
     return (
         <div>
-            <InputCountryField setInputCountry={setInputCountry}/>
-            <QueryResult inputCountry={inputCountry} countryListState={countryListState}/>
+            <InputCountryField setInputCountry={inputCountryState[1]}/>
+            <QueryResult inputCountryState={inputCountryState} countryListState={countryListState}/>
         </div>
     )
 };
