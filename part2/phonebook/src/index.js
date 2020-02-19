@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import Numbers from "./components/Numbers";
 import AddNumberForm from "./components/AddNumberForm";
 import SearchForm from "./components/SearchForm";
-import axios from 'axios'
+import personsService from './services/persons'
 
 const App = () => {
     const personsState = useState([]);
@@ -13,12 +13,9 @@ const App = () => {
     const setPersonsState = personsState[1];
 
     useEffect(() => {
-            axios
-                .get('http://localhost:3001/persons')
-                .then(response => {
-                    const persons = response.data;
-                    setPersonsState(persons)
-                })
+            personsService
+                .getPersons()
+                .then(persons => setPersonsState(persons))
         },
         [setPersonsState]
     );
