@@ -1,4 +1,5 @@
 import React from "react";
+import personsService from '../services/persons'
 
 const AddNumberForm = (props) => {
     const [persons, setPersons] = props.personsState;
@@ -16,11 +17,14 @@ const AddNumberForm = (props) => {
         const isNotInserted = (persons.find(p => p.name === newName) === undefined);
 
         if (isNotInserted) {
-            const newPersons = persons.concat({
+            const newPerson = {
                 name: newName,
                 number: newNumber
-            });
-            setPersons(newPersons);
+            };
+            personsService
+                .addPerson(newPerson)
+                .then(person => persons.concat(person))
+                .then(persons => setPersons(persons))
         } else {
             const alertString = `${newName} is already added to phonebook`;
             alert(alertString);
