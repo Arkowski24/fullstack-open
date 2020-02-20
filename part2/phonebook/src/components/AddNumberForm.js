@@ -14,9 +14,9 @@ const AddNumberForm = (props) => {
 
     const addNameAndNumber = (event) => {
         event.preventDefault();
-        const isNotInserted = (persons.find(p => p.name === newName) === undefined);
+        const insertedPerson = persons.find(p => p.name === newName);
 
-        if (isNotInserted) {
+        if (insertedPerson === undefined) {
             const newPerson = {
                 name: newName,
                 number: newNumber
@@ -26,8 +26,14 @@ const AddNumberForm = (props) => {
                 .then(person => persons.concat(person))
                 .then(persons => setPersons(persons))
         } else {
-            const alertString = `${newName} is already added to phonebook`;
-            alert(alertString);
+            const alertString = `${newName} is already added to phonebook, replace the old number with a new one?`;
+            if (window.confirm(alertString)) {
+                const newPerson = {...insertedPerson, number: newNumber};
+                personsService
+                    .modifyPerson(newPerson)
+                    .then(person => persons.map(p => p.id === person.id ? newPerson : p))
+                    .then(persons => setPersons(persons))
+            }
         }
     };
 
