@@ -29,7 +29,7 @@ const App = () => {
             <AddNumberForm personsState={personsState} newNameState={newNameState} newNumberState={newNumberState}/>
 
             <h3>Numbers</h3>
-            <Numbers people={personsState[0]} searchField={searchField}/>
+            <Numbers personsState={personsState} searchField={searchField}/>
         </div>
     )
 };
