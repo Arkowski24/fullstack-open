@@ -25,14 +25,25 @@ const persons =
         }
     ];
 
-app.get('/api/persons', (request, response) => {
-    response.json(persons)
-});
-
 app.get('/info', (request, response) => {
     const date = Date().toString();
     const textInfo = `Phonebook has info for ${persons.length} people\n\n${date}`;
     response.type('text/plain').send(textInfo)
+});
+
+app.get('/api/persons', (request, response) => {
+    response.json(persons)
+});
+
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id);
+    const person = persons.find(p => p.id === id);
+    if (person === undefined) {
+        response.status(404).json({
+            error: 'Not found'
+        })
+    }
+    response.json(person)
 });
 
 const PORT = 3001;
