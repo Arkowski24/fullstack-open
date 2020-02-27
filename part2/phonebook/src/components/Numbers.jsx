@@ -12,6 +12,11 @@ const Number = (props) => (
 const Numbers = (props) => {
   const [persons, setPersons] = props.personsState;
 
+  const handleNotification = (isError, text) => {
+    props.setNotificationMessage({ isError: true, text });
+    setTimeout(() => props.setNotificationMessage(null), 3000);
+  };
+
   const filterPeople = () => {
     if (props.searchField.length > 0) {
       const searchQuery = props.searchField.toLowerCase();
@@ -27,7 +32,8 @@ const Numbers = (props) => {
     if (window.confirm(`Delete ${person.name} ?`)) {
       personsService
         .deletePerson(person.id)
-        .then(() => setPersons(persons.filter((p) => p.id !== person.id)));
+        .then(() => setPersons(persons.filter((p) => p.id !== person.id)))
+        .catch(() => handleNotification(true, `Information of ${person.name} has already been removed from server`));
     }
   };
   const numbers = filterPeople()

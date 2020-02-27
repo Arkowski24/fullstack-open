@@ -10,6 +10,11 @@ const AddNumberForm = (props) => {
 
   const handleNumberChange = (event) => setNewNumber(event.target.value);
 
+  const handleNotification = (isError, text) => {
+    props.setNotificationMessage({ isError, text });
+    setTimeout(() => props.setNotificationMessage(null), 3000);
+  };
+
   const addNameAndNumber = (event) => {
     event.preventDefault();
     const insertedPerson = persons.find((p) => p.name === newName);
@@ -23,11 +28,12 @@ const AddNumberForm = (props) => {
       personsService
         .addPerson(newPerson)
         .then((person) => {
-          props.setNotificationMessage(`Added ${person.name}`);
-          setTimeout(() => props.setNotificationMessage(null), 3000);
+          handleNotification(false, `Added ${person.name}`);
           return person;
         })
-        .then((person) => persons.concat(person)).then((persons) => setPersons(persons));
+        .then((person) => persons.concat(person))
+        .then((persons) => setPersons(persons))
+        .catch(() => handleNotification(true, `Couldn't add ${newPerson.name}`));
     } else {
       const alertString = `${newName} is already added to phonebook, replace the old number with a new one?`;
       if (window.confirm(alertString)) {
@@ -36,12 +42,12 @@ const AddNumberForm = (props) => {
         personsService
           .modifyPerson(newPerson)
           .then((person) => {
-            props.setNotificationMessage(`Modified ${person.name}`);
-            setTimeout(() => props.setNotificationMessage(null), 3000);
+            handleNotification(false, `Modified ${person.name}`);
             return person;
           })
           .then((person) => persons.map((p) => (p.id === person.id ? newPerson : p)))
-          .then((persons) => setPersons(persons));
+          .then((persons) => setPersons(persons))
+          .catch(() => handleNotification(true, `Couldn't modify ${newPerson.name}`));
       }
     }
   };

@@ -34,7 +34,11 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Numbers personsState={personsState} searchField={searchField} />
+      <Numbers
+        personsState={personsState}
+        searchField={searchField}
+        setNotificationMessage={setNotificationMessage}
+      />
     </div>
   );
 };
