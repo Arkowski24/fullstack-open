@@ -28,7 +28,8 @@ let persons =
     ];
 
 app.use(bodyParser.json());
-app.use(morgan('tiny'));
+morgan.token('payload', (req, res) => req.route.methods.post ? JSON.stringify(req.body) : ' ');
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :payload'));
 
 app.get('/info', (request, response) => {
     const date = Date().toString();
