@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const cors = require('cors');
 
 let persons =
     [
@@ -27,8 +28,9 @@ let persons =
         }
     ];
 
+app.use(cors());
 app.use(bodyParser.json());
-morgan.token('payload', (req, res) => req.route.methods.post ? JSON.stringify(req.body) : ' ');
+morgan.token('payload', (req, res) => req.route !== undefined && req.route.methods.post ? JSON.stringify(req.body) : ' ');
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :payload'));
 
 app.get('/info', (request, response) => {
@@ -63,7 +65,7 @@ app.post('/api/persons', (request, response) => {
     };
 
     persons = persons.concat(person);
-    response.json(persons)
+    response.json(person)
 });
 
 app.get('/api/persons/:id', (request, response) => {
