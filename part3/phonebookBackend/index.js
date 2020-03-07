@@ -28,6 +28,7 @@ let persons =
         }
     ];
 
+app.use(express.static('build'));
 app.use(cors());
 app.use(bodyParser.json());
 morgan.token('payload', (req, res) => req.route !== undefined && req.route.methods.post ? JSON.stringify(req.body) : ' ');
