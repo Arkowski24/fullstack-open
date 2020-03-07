@@ -7,3 +7,13 @@ Content-Type: application/json
 }
 
 ###
+
+POST https://phonebook-fullstack-open.herokuapp.com/api/persons/
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "number": "00-11-222-333"
+}
+
+###

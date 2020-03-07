@@ -2,3 +2,8 @@ GET http://localhost:3001/api/persons/
 Accept-Encoding: application/json
 
 ###
+
+GET https://phonebook-fullstack-open.herokuapp.com/api/persons/
+Accept-Encoding: application/json
+
+###

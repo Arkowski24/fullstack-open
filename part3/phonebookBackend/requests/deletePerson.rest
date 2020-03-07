@@ -1,3 +1,7 @@
 DELETE http://localhost:3001/api/persons/1
 
 ###
+
+DELETE https://phonebook-fullstack-open.herokuapp.com/api/persons/1
+
+###
