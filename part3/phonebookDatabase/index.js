@@ -49,21 +49,29 @@ app.get('/api/persons/:id', (request, response) => {
 
     Person
         .findById(id)
-        .then(person => response.json(person))
-        .catch(() => response.status(404).json({
-            error: 'Not found'
-        }));
+        .then(person => {
+            if (person) {
+                response.json(person)
+            } else {
+                response.status(404).json({error: 'Not found'})
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            response.status(400).json({error: 'Malformed id'})
+        });
 });
 
 app.delete('/api/persons/:id', (request, response) => {
     const id = request.params.id;
 
     Person
-        .deleteOne({_id: id})
-        .then(() => response.status(204).end())
-        .catch(() => response.status(404).json({
-            error: 'Not found'
-        }));
+        .findByIdAndRemove({_id: id})
+        .then(result => response.status(204).end())
+        .catch(error => {
+            console.log(error);
+            response.status(400).json({error: 'Malformed id'})
+        });
 });
 
 const PORT = process.env.PORT || 3001;
