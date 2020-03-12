@@ -59,6 +59,32 @@ app.get('/api/persons/:id', (request, response, next) => {
         .catch(error => next(error));
 });
 
+app.put('/api/persons/:id', (request, response, next) => {
+    const id = request.params.id;
+    const body = request.body;
+
+    if (!body.name || !body.number) {
+        return response.status(400).json(
+            {error: "Name or number missing"}
+        )
+    }
+
+    const person = {
+        name: body.name,
+        number: body.number
+    };
+    Person
+        .findByIdAndUpdate(id, person, {new: true})
+        .then(newPerson => {
+            if (newPerson) {
+                response.json(newPerson)
+            } else {
+                response.status(404).json({error: 'Not found'})
+            }
+        })
+        .catch(error => next(error));
+});
+
 app.delete('/api/persons/:id', (request, response, next) => {
     const id = request.params.id;
 
