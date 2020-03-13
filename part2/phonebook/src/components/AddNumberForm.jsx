@@ -12,7 +12,7 @@ const AddNumberForm = (props) => {
 
   const handleNotification = (isError, text) => {
     props.setNotificationMessage({ isError, text });
-    setTimeout(() => props.setNotificationMessage(null), 3000);
+    setTimeout(() => props.setNotificationMessage(null), 5000);
   };
 
   const addNameAndNumber = (event) => {
@@ -33,7 +33,7 @@ const AddNumberForm = (props) => {
         })
         .then((person) => persons.concat(person))
         .then((persons) => setPersons(persons))
-        .catch(() => handleNotification(true, `Couldn't add ${newPerson.name}`));
+        .catch((error) => handleNotification(true, error.response.data.error));
     } else {
       const alertString = `${newName} is already added to phonebook, replace the old number with a new one?`;
       if (window.confirm(alertString)) {
@@ -47,7 +47,7 @@ const AddNumberForm = (props) => {
           })
           .then((person) => persons.map((p) => (p.id === person.id ? newPerson : p)))
           .then((persons) => setPersons(persons))
-          .catch(() => handleNotification(true, `Couldn't modify ${newPerson.name}`));
+          .catch((error) => handleNotification(true, error.response.data.error));
       }
     }
   };
