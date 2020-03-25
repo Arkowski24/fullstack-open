@@ -93,6 +93,47 @@ describe('created blogs', () => {
   });
 });
 
+describe('modified blogs', () => {
+  test('are modified correctly', async () => {
+    const blogs = await Blog.find({});
+    const blog = _.first(blogs);
+    // eslint-disable-next-line no-underscore-dangle
+    const blogId = blog._id.toString();
+
+    const newBlog = { ...listHelper.newBlog, likes: 10 };
+    const response = await api
+      .put(`/api/blogs/${blogId}`)
+      .send(newBlog)
+      .set('Accept', 'application/json')
+      .expect(200);
+
+    expect(response.body).toEqual({ ...newBlog, id: blogId });
+
+    const modifiedBlog = await Blog.findById(blogId);
+    expect({
+      title: modifiedBlog.title,
+      author: modifiedBlog.author,
+      url: modifiedBlog.url,
+      likes: modifiedBlog.likes,
+    }).toEqual(newBlog);
+  });
+
+  test('end with error for an incorrect id', async () => {
+    const blogs = await Blog.find({});
+    const blog = _.first(blogs);
+    // eslint-disable-next-line no-underscore-dangle
+    const blogId = blog._id.toString();
+    await Blog.deleteMany({});
+    const newBlog = { ...listHelper.newBlog, likes: 10 };
+
+    await api
+      .put(`/api/blogs/${blogId}`)
+      .send(newBlog)
+      .set('Accept', 'application/json')
+      .expect(404);
+  });
+});
+
 describe('deleted blogs', () => {
   test('are deleted correctly', async () => {
     const blogs = await Blog.find({});
