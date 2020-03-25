@@ -15,6 +15,13 @@ const initalBlogs = [{
 },
 ];
 
+const newBlog = {
+  title: 'Example title',
+  author: 'Example author',
+  url: 'blog.example.com',
+  likes: 14,
+};
+
 // eslint-disable-next-line no-unused-vars
 const dummy = (blogs) => 1;
 
@@ -46,6 +53,7 @@ const mostLikes = (blogs) => _.chain(blogs)
 
 module.exports = {
   initalBlogs,
+  newBlog,
   dummy,
   totalLikes,
   favoriteBlog,

@@ -27,6 +27,28 @@ describe('blogs', () => {
       .map((b) => expect(b.id)
         .toBeDefined());
   });
+
+  test('are created correctly', async () => {
+    const { newBlog } = listHelper;
+
+    const response = await api
+      .post('/api/blogs/')
+      .send(newBlog)
+      .set('Accept', 'application/json')
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const { id } = response.body;
+    expect(response.body).toEqual({ ...newBlog, id });
+
+    const blogs = await Blog.find({});
+    expect(blogs.length).toBe(listHelper.initalBlogs.length + 1);
+
+    const blog = await Blog.findById(id);
+    expect({
+      title: blog.title, author: blog.author, url: blog.url, likes: blog.likes,
+    }).toEqual(newBlog);
+  });
 });
 
 beforeEach(async () => {
