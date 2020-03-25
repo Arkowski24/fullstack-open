@@ -19,7 +19,6 @@ const newBlog = {
   title: 'Example title',
   author: 'Example author',
   url: 'blog.example.com',
-  likes: 14,
 };
 
 // eslint-disable-next-line no-unused-vars

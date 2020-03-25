@@ -29,7 +29,7 @@ describe('blogs', () => {
   });
 
   test('are created correctly', async () => {
-    const { newBlog } = listHelper;
+    const newBlog = { ...listHelper.newBlog, likes: 14 };
 
     const response = await api
       .post('/api/blogs/')
@@ -48,6 +48,19 @@ describe('blogs', () => {
     expect({
       title: blog.title, author: blog.author, url: blog.url, likes: blog.likes,
     }).toEqual(newBlog);
+  });
+
+  test('likes field defaults to 0', async () => {
+    const { newBlog } = listHelper;
+
+    const response = await api
+      .post('/api/blogs/')
+      .send(newBlog)
+      .set('Accept', 'application/json')
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    expect(response.body.likes).toBe(0);
   });
 });
 
