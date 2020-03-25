@@ -62,6 +62,16 @@ describe('blogs', () => {
 
     expect(response.body.likes).toBe(0);
   });
+
+  test('requires title and url', async () => {
+    const newBlog = { author: 'Example author', likes: 10 };
+
+    await api
+      .post('/api/blogs/')
+      .send(newBlog)
+      .set('Accept', 'application/json')
+      .expect(400);
+  });
 });
 
 beforeEach(async () => {
