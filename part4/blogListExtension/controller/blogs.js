@@ -1,15 +1,26 @@
+const _ = require('lodash');
+
 const blogRouter = require('express').Router();
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 blogRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({});
+  const blogs = await Blog.find({}).populate('user', { blogs: 0 });
   return response.json(blogs);
 });
 
 blogRouter.post('/', async (request, response) => {
-  const blog = new Blog(request.body);
+  const user = _.first(await User.find({}));
+  // eslint-disable-next-line no-underscore-dangle
+  const userId = user._id.toString();
 
+  const blog = new Blog({ ...request.body, user: userId });
   const newBlog = await blog.save();
+
+  // eslint-disable-next-line no-underscore-dangle
+  user.blogs = user.blogs.concat(newBlog._id);
+  await user.save();
+
   return response.status(201).json(newBlog);
 });
 
