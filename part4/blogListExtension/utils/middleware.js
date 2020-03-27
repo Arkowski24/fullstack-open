@@ -9,7 +9,7 @@ const getTokenFrom = (request) => {
 };
 
 const tokenExtractor = (request, response, next) => {
-  response.token = getTokenFrom(request);
+  request.token = getTokenFrom(request);
   next();
 };
 

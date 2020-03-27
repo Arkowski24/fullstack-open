@@ -44,10 +44,19 @@ blogRouter.put('/:id', async (request, response) => {
 });
 
 blogRouter.delete('/:id', async (request, response) => {
+  const { token } = request;
+  const decodedToken = token === null ? null : jwt.verify(request.token, config.SECRET);
+  if (!token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' });
+  }
+  const user = await User.findById(decodedToken.id);
   const { id } = request.params;
 
-  const result = await Blog.findByIdAndRemove({ _id: id });
-  if (result === null) return response.status(404).end();
+  const blog = await Blog.findById({ _id: id });
+  if (blog === null) return response.status(404).end();
+  // eslint-disable-next-line no-underscore-dangle
+  if (blog.use.toString() !== user._id.toString()) return response.status(401).json({ error: 'Only creator can delete blog' });
+  await blog.remove();
   return response.status(204).end();
 });
 
