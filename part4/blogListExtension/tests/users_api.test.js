@@ -67,7 +67,7 @@ describe('created users', () => {
 beforeEach(async () => {
   await User.deleteMany({});
 
-  const usersPromises = listHelper.initalUsers
+  const usersPromises = listHelper.initialUsers
     .map((u) => User(u))
     .map((user) => user.save());
 

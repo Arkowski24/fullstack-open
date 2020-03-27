@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
 const _ = require('lodash');
 const supertest = require('supertest');
@@ -5,6 +6,7 @@ const app = require('../app');
 
 const api = supertest(app);
 const Blog = require('../models/blog');
+const User = require('../models/user');
 const listHelper = require('../utils/list_helper');
 
 describe('returned blogs', () => {
@@ -31,6 +33,23 @@ describe('returned blogs', () => {
 });
 
 describe('created blogs', () => {
+  let token = null;
+  let userId = null;
+
+  beforeEach(async () => {
+    const user = listHelper.initialUsers[0];
+    userId = (await User(user).save())._id.toString();
+
+    const response = await api
+      .post('/api/login/')
+      .send({ username: user.username, password: user.password })
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    token = response.body.token;
+  });
+
   test('are created correctly', async () => {
     const newBlog = {
       ...listHelper.newBlog,
@@ -40,6 +59,7 @@ describe('created blogs', () => {
     const response = await api
       .post('/api/blogs/')
       .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
       .set('Accept', 'application/json')
       .expect(201)
       .expect('Content-Type', /application\/json/);
@@ -49,6 +69,7 @@ describe('created blogs', () => {
       .toEqual({
         ...newBlog,
         id,
+        user: userId,
       });
 
     const blogs = await Blog.find({});
@@ -71,6 +92,7 @@ describe('created blogs', () => {
     const response = await api
       .post('/api/blogs/')
       .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
       .set('Accept', 'application/json')
       .expect(201)
       .expect('Content-Type', /application\/json/);
@@ -88,8 +110,22 @@ describe('created blogs', () => {
     await api
       .post('/api/blogs/')
       .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
       .set('Accept', 'application/json')
       .expect(400);
+  });
+
+  test('without authorization fails', async () => {
+    const newBlog = {
+      ...listHelper.newBlog,
+      likes: 14,
+    };
+
+    await api
+      .post('/api/blogs/')
+      .send(newBlog)
+      .set('Accept', 'application/json')
+      .expect(401);
   });
 });
 
@@ -97,7 +133,6 @@ describe('modified blogs', () => {
   test('are modified correctly', async () => {
     const blogs = await Blog.find({});
     const blog = _.first(blogs);
-    // eslint-disable-next-line no-underscore-dangle
     const blogId = blog._id.toString();
 
     const newBlog = { ...listHelper.newBlog, likes: 10 };
@@ -121,7 +156,6 @@ describe('modified blogs', () => {
   test('end with error for an incorrect id', async () => {
     const blogs = await Blog.find({});
     const blog = _.first(blogs);
-    // eslint-disable-next-line no-underscore-dangle
     const blogId = blog._id.toString();
     await Blog.deleteMany({});
     const newBlog = { ...listHelper.newBlog, likes: 10 };
@@ -135,14 +169,35 @@ describe('modified blogs', () => {
 });
 
 describe('deleted blogs', () => {
+  let token = null;
+  let blog = null;
+  let blogId = null;
+
+  beforeEach(async () => {
+    const newUser = listHelper.initialUsers[0];
+
+    const user = await User(newUser).save();
+    blog = await Blog({ ...listHelper.newBlog, user: user._id }).save();
+    user.blogs = user.blogs.concat(blog);
+    await user.save();
+    blogId = blog._id.toString();
+
+    const response = await api
+      .post('/api/login/')
+      .send({ username: newUser.username, password: newUser.password })
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    token = response.body.token;
+  });
+
   test('are deleted correctly', async () => {
     const blogs = await Blog.find({});
-    const blog = _.first(blogs);
-    // eslint-disable-next-line no-underscore-dangle
-    const blogId = blog._id.toString();
 
     await api
       .delete(`/api/blogs/${blogId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204);
 
     const newBlogs = await Blog.find({});
@@ -151,20 +206,24 @@ describe('deleted blogs', () => {
   });
 
   test('end with error for an incorrect id', async () => {
-    const blogs = await Blog.find({});
-    const blog = _.first(blogs);
-    // eslint-disable-next-line no-underscore-dangle
-    const blogId = blog._id.toString();
     await Blog.deleteMany({});
 
     await api
       .delete(`/api/blogs/${blogId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(404);
+  });
+
+  test('without authorization fails', async () => {
+    await api
+      .delete(`/api/blogs/${blogId}`)
+      .expect(401);
   });
 });
 
 beforeEach(async () => {
   await Blog.deleteMany({});
+  await User.deleteMany({});
 
   const blogPromises = listHelper.initalBlogs
     .map((b) => Blog(b))

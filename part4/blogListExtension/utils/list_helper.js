@@ -15,12 +15,12 @@ const initalBlogs = [{
 },
 ];
 
-const initalUsers = [
+const initialUsers = [
   {
     username: 'Username1',
     name: 'Name1',
     password: '4321',
-    passwordHash: '$2y$10$5teoqW9ftuQ3BDRU2hwyXuiSJ7p5pJ3GGmIqY0Xl6Lg2hiPiDsYfO',
+    passwordHash: '$2a$10$qTUkdQ0y7JBO2NKCqsRWve8twRO64kXPSjgGqWSFhG2dmsmYWZyvi',
   },
 ];
 
@@ -62,7 +62,7 @@ const mostLikes = (blogs) => _.chain(blogs)
 module.exports = {
   initalBlogs,
   newBlog,
-  initalUsers,
+  initialUsers,
   dummy,
   totalLikes,
   favoriteBlog,

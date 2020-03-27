@@ -52,10 +52,10 @@ blogRouter.delete('/:id', async (request, response) => {
   const user = await User.findById(decodedToken.id);
   const { id } = request.params;
 
-  const blog = await Blog.findById({ _id: id });
+  const blog = await Blog.findById(id);
   if (blog === null) return response.status(404).end();
   // eslint-disable-next-line no-underscore-dangle
-  if (blog.use.toString() !== user._id.toString()) return response.status(401).json({ error: 'Only creator can delete blog' });
+  if (blog.user.toString() !== user._id.toString()) return response.status(401).json({ error: 'Only creator can delete blog' });
   await blog.remove();
   return response.status(204).end();
 });
