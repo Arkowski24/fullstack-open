@@ -13,6 +13,10 @@ const App = () => {
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
 
+  const [notification, setNotification] = useState({
+    message: null
+  });
+
   useEffect(() => {
     blogService
       .getAll()
@@ -24,22 +28,30 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
-      blogService.setUser(user.token)
+      blogService.setUser(user.token);
     }
   }, []);
+
+  const handleMessage = (message, isError) => {
+    setNotification({message, isError});
+    setTimeout(() => setNotification({message: null}), 3000)
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
     try {
+      console.log('xd')
       const user = await loginService.login(username, password);
       window.localStorage.setItem('loggedBlogsUser', JSON.stringify(user));
       setUser(user);
       setUsername('');
       setPassword('');
       blogService.setUser(user.token);
+      handleMessage(`Logged in`, false);
     } catch (e) {
-      console.error(e);
+      console.log(e);
+      handleMessage(e.response.data.error, true);
     }
   };
 
@@ -48,6 +60,7 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogsUser');
     setUser(null);
     blogService.setUser(null);
+    handleMessage(`Logged out`, false);
   };
 
   const handleCreate = async (event) => {
@@ -59,14 +72,47 @@ const App = () => {
       setTitle('');
       setAuthor('');
       setUrl('');
+      handleMessage(`a new blog ${blog.title} by ${blog.author} added`, false);
     } catch (e) {
-      console.error(e);
+      handleMessage(e.response.data.error, true);
     }
+  };
+
+  const notificationBox = () => {
+    if (notification.message === null) return null;
+    const commonStyle = {
+      backgroundColor: 'lightgrey',
+      borderStyle: 'solid',
+      borderColor: 'red',
+      borderRadius: '5px',
+      borderWidth: '2px',
+      fontSize: '22px',
+      padding: '10px',
+      margin: '10px 0px 10px',
+    };
+    const errorStyle = {
+      ...commonStyle,
+      borderColor: 'red',
+      color: 'red'
+    };
+    const messageStyle = {
+      ...commonStyle,
+      borderColor: 'green',
+      color: 'green'
+    };
+    const style = notification.isError ? errorStyle : messageStyle;
+
+    return (
+      <div style={style}>
+        {notification.message}
+      </div>
+    );
   };
 
   const loginForm = () => (
     <div>
       <h2>Log in to application</h2>
+      {notificationBox()}
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -125,6 +171,7 @@ const App = () => {
   const blogPosts = () => (
     <div>
       <h2>blogs</h2>
+      {notificationBox()}
       <div>
         {`${user.name} logged in`}
         <button type='button' onClick={handleLogout}>logout</button>
