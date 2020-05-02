@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
+import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -12,6 +13,8 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+
+  const createBlogFormRef = React.createRef()
 
   const [notification, setNotification] = useState({
     message: null
@@ -41,7 +44,6 @@ const App = () => {
     event.preventDefault();
 
     try {
-      console.log('xd')
       const user = await loginService.login(username, password);
       window.localStorage.setItem('loggedBlogsUser', JSON.stringify(user));
       setUser(user);
@@ -51,7 +53,7 @@ const App = () => {
       handleMessage(`Logged in`, false);
     } catch (e) {
       console.log(e);
-      handleMessage(e.response.data.error, true);
+      e.response && handleMessage(e.response.data.error, true);
     }
   };
 
@@ -68,13 +70,15 @@ const App = () => {
 
     try {
       const blog = await blogService.createBlog(title, author, url);
+      createBlogFormRef.current.toggleVisibility();
       setBlogs(blogs.concat(blog));
       setTitle('');
       setAuthor('');
       setUrl('');
       handleMessage(`a new blog ${blog.title} by ${blog.author} added`, false);
     } catch (e) {
-      handleMessage(e.response.data.error, true);
+      console.log(e)
+      e.response && handleMessage(e.response.data.error, true);
     }
   };
 
@@ -138,7 +142,7 @@ const App = () => {
   const createBlogForm = () => (
     <div>
       <h2>create new</h2>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleCreate}>
         <div>
           title:
           <input type='text'
@@ -163,7 +167,7 @@ const App = () => {
                  onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        <button type='button' onClick={handleCreate}>create</button>
+        <button type='submit'>create</button>
       </form>
     </div>
   );
@@ -176,10 +180,14 @@ const App = () => {
         {`${user.name} logged in`}
         <button type='button' onClick={handleLogout}>logout</button>
       </div>
-      {createBlogForm()}
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog}/>
-      )}
+      <Togglable buttonLabel='new note' ref={createBlogFormRef}>
+        {createBlogForm()}
+      </Togglable>
+      <div>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog}/>
+        )}
+      </div>
     </div>
   );
 
