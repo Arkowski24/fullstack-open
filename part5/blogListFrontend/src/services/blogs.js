@@ -25,8 +25,16 @@ const createBlog = (title, author, url) => {
   return request.then(response => response.data);
 };
 
+const modifyBlog = (modifiedBlog) => {
+  const config = { headers: { Authorization: token } };
+
+  const request = axios.put(`${baseUrl}/${modifiedBlog.id}`, modifiedBlog, config);
+  return request.then(response => response.data);
+};
+
 export default {
   setUser,
   getAll,
-  createBlog
+  createBlog,
+  modifyBlog
 };

@@ -78,6 +78,18 @@ const App = () => {
     }
   };
 
+  const modifyBlog = async (modifiedBlog) => {
+    try {
+      const newBlog = await blogService.modifyBlog(modifiedBlog);
+      setBlogs(blogs.map(b => b.id === newBlog.id ? newBlog : b));
+
+      handleMessage(`${newBlog.title} modified`, false);
+    } catch (e) {
+      console.log(e);
+      e.response && handleMessage(e.response.data.error, true);
+    }
+  };
+
 
   const blogsHeader = () => (
     <h2>blogs</h2>
@@ -118,7 +130,7 @@ const App = () => {
   const blogsList = () => (
     <div>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog}/>
+        <Blog key={blog.id} blog={blog} modifyBlog={modifyBlog}/>
       )}
     </div>
   );

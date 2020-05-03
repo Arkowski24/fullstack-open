@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, modifyBlog }) => {
   const [hidden, setHidden] = useState(true);
 
   const blogStyle = {
@@ -14,6 +14,14 @@ const Blog = ({ blog }) => {
   const handleTitleButtonClick = (e) => {
     e.preventDefault();
     setHidden(!hidden);
+  };
+
+  const handleLikeButtonClick = (e) => {
+    e.preventDefault();
+    modifyBlog({
+      ...blog,
+      likes: blog.likes + 1
+    });
   };
 
   const title = () => (
@@ -30,7 +38,9 @@ const Blog = ({ blog }) => {
       <div>{blog.url}</div>
       <div>
         {`likes ${blog.likes} `}
-        <button type='button'>like</button>
+        <button type='button' onClick={handleLikeButtonClick}>
+          like
+        </button>
       </div>
       <div>{blog.author}</div>
     </div>
