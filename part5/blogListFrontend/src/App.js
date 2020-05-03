@@ -90,6 +90,19 @@ const App = () => {
     }
   };
 
+  const deleteBlog = async (blogId) => {
+    try {
+
+      await blogService.deleteBlog(blogId);
+      setBlogs(blogs.filter(b => b.id !== blogId));
+
+      handleMessage('Blog deleted', false);
+    } catch (e) {
+      console.log(e);
+      e.response && handleMessage(e.response.data.error, true);
+    }
+  };
+
 
   const blogsHeader = () => (
     <h2>blogs</h2>
@@ -134,7 +147,13 @@ const App = () => {
     return (
       <div>
         {orderedBlogs.map(blog =>
-          <Blog key={blog.id} blog={blog} modifyBlog={modifyBlog}/>
+          <Blog
+            key={blog.id}
+            blog={blog}
+            modifyBlog={modifyBlog}
+            deleteBlog={deleteBlog}
+            isRemovable={blog.user.username === user.username}
+          />
         )}
       </div>
     );

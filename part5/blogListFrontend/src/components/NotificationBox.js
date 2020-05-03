@@ -1,6 +1,6 @@
 import React from 'react';
 
-const NotificationBox = ({message, isError}) => {
+const NotificationBox = ({ message, isError }) => {
   if (message === null) return null;
 
   const commonStyle = {

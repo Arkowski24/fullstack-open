@@ -32,9 +32,15 @@ const modifyBlog = (modifiedBlog) => {
   return request.then(response => response.data);
 };
 
+const deleteBlog = (blogId) => {
+  const config = { headers: { Authorization: token } };
+  return axios.delete(`${baseUrl}/${blogId}`, config);
+};
+
 export default {
   setUser,
   getAll,
   createBlog,
-  modifyBlog
+  modifyBlog,
+  deleteBlog
 };
