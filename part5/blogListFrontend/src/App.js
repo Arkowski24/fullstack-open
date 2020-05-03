@@ -127,13 +127,18 @@ const App = () => {
     </Togglable>
   );
 
-  const blogsList = () => (
-    <div>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} modifyBlog={modifyBlog}/>
-      )}
-    </div>
-  );
+  const blogsList = () => {
+    const orderedBlogs = blogs.slice();
+    orderedBlogs.sort((a, b) => b.likes - a.likes);
+
+    return (
+      <div>
+        {orderedBlogs.map(blog =>
+          <Blog key={blog.id} blog={blog} modifyBlog={modifyBlog}/>
+        )}
+      </div>
+    );
+  };
 
   const blogPosts = () => (
     <div>
