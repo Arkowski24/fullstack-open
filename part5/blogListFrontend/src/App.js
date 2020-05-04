@@ -50,7 +50,7 @@ const App = () => {
       setUser(user);
       blogService.setUser(user.token);
 
-      handleMessage(`Logged in`, false);
+      handleMessage('Logged in', false);
     } catch (e) {
       console.log(e);
       e.response && handleMessage(e.response.data.error, true);
@@ -62,7 +62,7 @@ const App = () => {
     setUser(null);
     blogService.setUser(null);
 
-    handleMessage(`Logged out`, false);
+    handleMessage('Logged out', false);
   };
 
   const addBlog = async (title, author, url) => {

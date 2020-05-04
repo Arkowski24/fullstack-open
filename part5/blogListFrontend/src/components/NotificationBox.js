@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 
 const NotificationBox = ({ message, isError }) => {
   if (message === null) return null;
@@ -30,6 +32,12 @@ const NotificationBox = ({ message, isError }) => {
       {message}
     </div>
   );
+};
+
+
+NotificationBox.propTypes = {
+  message: PropTypes.string,
+  isError: PropTypes.bool
 };
 
 export default NotificationBox;
