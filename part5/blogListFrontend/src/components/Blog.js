@@ -37,8 +37,8 @@ const Blog = ({
   };
 
   const title = () => (
-    <div>
-      {blog.title + ' '}
+    <div className='blogTitle'>
+      {`${blog.title} ${blog.author} `}
       <button type='button' onClick={handleTitleButtonClick}>
         {hidden ? 'view' : 'hide'}
       </button>
@@ -62,10 +62,10 @@ const Blog = ({
 
   const details = () => (
     <div>
-      <div>{blog.url}</div>
-      <div>{likes()}</div>
-      <div>{blog.author}</div>
-      <div>{isRemovable && removeButton()}</div>
+      <div className='blogUrl'>{blog.url}</div>
+      <div className='blogLikes'>{likes()}</div>
+      <div className='blogUser'>{blog.user.name}</div>
+      <div className='blogRemove'>{isRemovable && removeButton()}</div>
     </div>
   );
 
