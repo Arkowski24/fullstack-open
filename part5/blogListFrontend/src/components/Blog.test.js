@@ -18,13 +18,15 @@ describe('<Blog />', () => {
     likes: 7,
     __v: 0,
   };
+  let modifyBlog;
+  let deleteBlog;
   let component;
 
-  beforeEach(() => {
-    const modifyBlog = jest.fn();
-    const deleteBlog = jest.fn();
-    const isRemovable = true;
 
+  beforeEach(() => {
+    const isRemovable = true;
+    modifyBlog = jest.fn();
+    deleteBlog = jest.fn();
     component = render(
       <Blog blog={blog} modifyBlog={modifyBlog} deleteBlog={deleteBlog} isRemovable={isRemovable}/>
     );
@@ -37,7 +39,7 @@ describe('<Blog />', () => {
     expect(component.container).not.toHaveTextContent(blog.likes);
   });
 
-  test(' displays all information after click', () => {
+  test('displays all information after click', () => {
     const button = component.getByText('view');
     fireEvent.click(button);
 
@@ -45,5 +47,16 @@ describe('<Blog />', () => {
     expect(component.container).toHaveTextContent(blog.author);
     expect(component.container).toHaveTextContent(blog.url);
     expect(component.container).toHaveTextContent(blog.likes);
+  });
+
+  test('the handler is called twice if the like button is clicked two times', () => {
+    const viewButton = component.getByText('view');
+    fireEvent.click(viewButton);
+
+    const likeButton = component.getByText('like');
+    fireEvent.click(likeButton);
+    fireEvent.click(likeButton);
+
+    expect(modifyBlog.mock.calls).toHaveLength(2);
   });
 });
