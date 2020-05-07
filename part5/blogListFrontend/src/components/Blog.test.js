@@ -28,7 +28,7 @@ describe('<Blog />', () => {
     modifyBlog = jest.fn();
     deleteBlog = jest.fn();
     component = render(
-      <Blog blog={blog} modifyBlog={modifyBlog} deleteBlog={deleteBlog} isRemovable={isRemovable}/>
+      <Blog blog={blog} modifyBlog={modifyBlog} deleteBlog={deleteBlog} isRemovable={isRemovable} />
     );
   });
 
