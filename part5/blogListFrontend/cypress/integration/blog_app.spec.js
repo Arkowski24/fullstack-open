@@ -4,11 +4,17 @@ describe('Blog app', function() {
     name: 'TestUser',
     password: '1234'
   };
+  const anotherUser = {
+    username: 'Username2',
+    name: 'AnotherUser',
+    password: '4321'
+  };
 
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3001/api/testing/reset');
     cy.clearLocalStorage();
     cy.request('POST', 'http://localhost:3001/api/users/', user);
+    cy.request('POST', 'http://localhost:3001/api/users/', anotherUser);
 
     cy.visit('http://localhost:3000');
   });
@@ -58,15 +64,7 @@ describe('Blog app', function() {
     };
 
     beforeEach(function () {
-      const credentials = {
-        username: user.username,
-        password: user.password
-      };
-      cy.request('POST', 'http://localhost:3001/api/login', credentials)
-        .then(response => {
-          localStorage.setItem('loggedBlogsUser', JSON.stringify(response.body));
-          cy.visit('http://localhost:3000');
-        });
+      cy.login(user);
     });
 
     it('A blog can be created', function () {
@@ -84,6 +82,52 @@ describe('Blog app', function() {
 
       cy.contains(newBlog.title);
       cy.contains(newBlog.author);
+    });
+
+    describe('When blog is created', function () {
+      beforeEach(function () {
+        cy.createBlog(newBlog);
+        cy.get('.blog').parent()
+          .should('contain', newBlog.title)
+          .and('contain', newBlog.author)
+          .and('not.contain', newBlog.url)
+          .and('not.contain', 'remove');
+
+        cy.contains('view').click();
+        cy.get('.blog').parent()
+          .should('contain', newBlog.title)
+          .and('contain', newBlog.author)
+          .and('contain', 'likes 0')
+          .and('contain', newBlog.url)
+          .and('contain', 'remove');
+
+        cy.contains('hide').click();
+      });
+
+      it('A blog can be liked', function () {
+        cy.contains('view').click();
+        cy.contains('like').click();
+        cy.contains('likes 1');
+      });
+
+      it('A blog can be removed', function () {
+        cy.contains('view').click();
+        cy.contains('remove').click();
+
+        cy.get('.notificationBox')
+          .should('contain', 'Blog deleted')
+          .and('be.visible')
+          .and('have.css', 'border-color', 'rgb(0, 128, 0)');
+      });
+
+      it('A blog cannot be removed by other user', function () {
+        cy.login(anotherUser)
+          .then(() => {
+            cy.contains('view').click();
+            cy.get('.blog').parent()
+              .should('not.contain', 'remove');
+          });
+      });
     });
   });
 });

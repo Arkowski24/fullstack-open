@@ -70,7 +70,7 @@ const Blog = ({
   );
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       {title()}
       {hidden || details()}
     </div>
