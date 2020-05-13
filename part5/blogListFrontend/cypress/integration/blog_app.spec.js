@@ -129,5 +129,20 @@ describe('Blog app', function() {
           });
       });
     });
+
+    it('Blogs are ordered by likes', function () {
+      cy.createBlogWithLikes({ ...newBlog, title: 'Title 1', likes: 1 });
+      cy.createBlogWithLikes({ ...newBlog, title: 'Title 2', likes: 3 });
+      cy.createBlogWithLikes({ ...newBlog, title: 'Title 3' , likes: 2 });
+
+      cy.get('.blog')
+        .then(blogs => {
+          const blogTitle1 = blogs[0].textContent.substr(0, 7);
+          const blogTitle2 = blogs[1].textContent.substr(0, 7);
+          const blogTitle3 = blogs[2].textContent.substr(0, 7);
+
+          expect([blogTitle1, blogTitle2, blogTitle3]).to.have.ordered.members(['Title 2', 'Title 3', 'Title 1']);
+        });
+    });
   });
 });
