@@ -5,35 +5,37 @@ import { addNotification, removeNotification } from '../reducers/notificationRed
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => {
-    const items = state.anecdotes.slice()
-    items.sort((a, b) => b.votes - a.votes)
-    return items
-  })
-  const dispatch = useDispatch()
+    const items = state.anecdotes.filter(a => a.content.includes(state.filter));
+    items.sort((a, b) => b.votes - a.votes);
+    return items;
+  });
+  const dispatch = useDispatch();
 
   const vote = (id, content) => {
-    console.log('vote', id)
+    console.log('vote', id);
 
-    dispatch(voteAnecdote(id))
-    dispatch(addNotification(`you voted ${content}`))
-    setTimeout(() => { dispatch(removeNotification()) }, 5000);
-  }
+    dispatch(voteAnecdote(id));
+    dispatch(addNotification(`you voted ${content}`));
+    setTimeout(() => {
+      dispatch(removeNotification());
+    }, 5000);
+  };
 
   return (
     <div>
       {anecdotes.map(anecdote =>
-          <div key={anecdote.id}>
-            <div>
-              {anecdote.content}
-            </div>
-            <div>
-              has {anecdote.votes}
-              <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
-            </div>
+        <div key={anecdote.id}>
+          <div>
+            {anecdote.content}
           </div>
-        )}
+          <div>
+            has {anecdote.votes}
+            <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
+          </div>
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default AnecdoteList
+export default AnecdoteList;

@@ -32,7 +32,7 @@ const reducer = (state = initialState, action) => {
       };
       return state.map(a => a.id === action.data.id ? newAnecdote : a);
     case 'ADD':
-      return state.concat(asObject(action.data.content))
+      return state.concat(asObject(action.data.content));
     default:
       return state;
   }
