@@ -28,10 +28,13 @@ export const voteAnecdote = (id) => {
   };
 };
 
-export const addAnecdote = (data) => {
-  return {
-    type: 'ANECDOTE_ADD',
-    data
+export const addAnecdote = (content) => {
+  return async dispatch => {
+    const data = await anecdotesService.create(content);
+    dispatch({
+      type: 'ANECDOTE_ADD',
+      data
+    });
   };
 };
 
