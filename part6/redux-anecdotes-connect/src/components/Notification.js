@@ -11,7 +11,7 @@ const Notification = () => {
   };
   return (
     <div style={style}>
-      {notification}
+      {notification ? notification.content : null}
     </div>
   );
 };
