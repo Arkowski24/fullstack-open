@@ -12,13 +12,15 @@ const reducer = (state = null, action) => {
   }
 };
 
-export const addNotification = (content) => ({
-  type: 'NOTIFICATION_ADD',
-  data: { content }
-});
-
-export const removeNotification = () => ({
-  type: 'NOTIFICATION_REMOVE'
-});
+export const setNotification = (content, timeout) =>
+  async (dispatch) => {
+    dispatch({
+      type: 'NOTIFICATION_ADD',
+      data: { content }
+    });
+    setTimeout(() => {
+      dispatch({ type: 'NOTIFICATION_REMOVE' });
+    }, 1000 * timeout);
+  };
 
 export default reducer;
