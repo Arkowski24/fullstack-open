@@ -16,7 +16,17 @@ const create = async (content) => {
   return response.data;
 };
 
+const update = async ({ id, content, votes }) => {
+  const payload = {
+    content,
+    votes
+  };
+  const response = await axios.put(`${baseUrl}/${id}`, payload);
+  return response.data;
+};
+
 export default {
   getAll,
-  create
+  create,
+  update
 };
