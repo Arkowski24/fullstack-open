@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import {
-  BrowserRouter as Router,
-  Switch, Route, Link
+  Switch, Route, Link, Redirect,
+  useRouteMatch
 } from 'react-router-dom';
+import Anecdote from './components/Anecdote';
 
 
 const Menu = () => {
@@ -22,7 +23,11 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id}>{anecdote.content}</li>)}
+      {anecdotes.map(anecdote => (
+        <li key={anecdote.id}>
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
+      ))}
     </ul>
   </div>
 );
@@ -134,12 +139,20 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a));
   };
 
+  const match = useRouteMatch('/anecdotes/:id');
+  const anecdote = match
+    ? anecdotes.find(anecdote => anecdote.id === match.params.id)
+    : null;
+
   return (
-    <Router>
+    <div>
       <h1>Software anecdotes</h1>
       <Menu/>
 
       <Switch>
+        <Route path="/anecdotes/:id" render={() =>
+          anecdote ? <Anecdote anecdote={anecdote}/> : <Redirect to="/"/>
+        }/>
         <Route path="/about">
           <About/>
         </Route>
@@ -152,7 +165,7 @@ const App = () => {
       </Switch>
 
       <Footer/>
-    </Router>
+    </div>
   );
 };
 
