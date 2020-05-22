@@ -3,7 +3,7 @@ import {
   Switch, Route, Link, Redirect,
   useRouteMatch, useHistory
 } from 'react-router-dom';
-import { useField } from './hooks';
+import { useFieldWithReset } from './hooks';
 
 import Anecdote from './components/Anecdote';
 
@@ -64,16 +64,16 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
-  const content = useField('text');
-  const author = useField('text');
-  const info = useField('text');
+  const content = useFieldWithReset('text');
+  const author = useFieldWithReset('text');
+  const info = useFieldWithReset('text');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
-      content: content.value,
-      author: author.value,
-      info: info.value,
+      content: content.field.value,
+      author: author.field.value,
+      info: info.field.value,
       votes: 0
     });
   };
@@ -91,15 +91,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...content} />
+          <input {...content.field} />
         </div>
         <div>
           author
-          <input {...author} />
+          <input {...author.field} />
         </div>
         <div>
           url for more info
-          <input {...info} />
+          <input {...info.field} />
         </div>
         <button type='submit'>create</button>
         <button type='button' onClick={handleClear}>reset</button>
