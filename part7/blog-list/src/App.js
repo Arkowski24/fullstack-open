@@ -1,97 +1,58 @@
-import React, { useEffect } from 'react';
+import React  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { BrowserRouter as Router, Redirect, Route, Switch, useHistory } from 'react-router-dom';
 
-import CreateBlogForm from './components/forms/CreateBlogForm';
-import LoginForm from './components/forms/LoginForm';
-import Blog from './components/Blog';
+import LoginPage from './pages/LoginPage';
+import BlogsPage from './pages/BlogsPage';
+import UsersPage from './pages/UsersPage';
+import { logoutUser } from './reducers/userReducer';
 import NotificationBox from './components/NotificationBox';
-import Togglable from './components/Togglable';
 
-import { initBlogs } from './reducers/blogReducer';
-import { initUser, logoutUser } from './reducers/userReducer';
+const AppHeader = ({ user }) => (
+  <>
+    { user ? <h2>blogs</h2> : <h2>Log in to application</h2> }
+  </>
+);
 
-
-const App = () => {
-  const blogs = useSelector(({ blogs }) => {
-    const orderedBlogs = blogs.slice();
-    orderedBlogs.sort((a, b) => b.likes - a.likes);
-    return orderedBlogs;
-  });
-  const user = useSelector(({ user }) => user);
-
+const LogoutButton = ({ user }) => {
   const dispatch = useDispatch();
-  const createBlogFormRef = React.createRef();
+  const history = useHistory();
 
-  useEffect(() => {
-    dispatch(initUser());
-    dispatch(initBlogs());
-  }, [dispatch]);
-
-  const blogsHeader = () => (
-    <h2>blogs</h2>
-  );
-
-  const notificationBox = () => (
-    <NotificationBox/>
-  );
-
-  const loginForm = () => (
-    <div>
-      <h2>Log in to application</h2>
-      {notificationBox()}
-      <LoginForm />
-    </div>
-  );
-
-  const logoutButton = () => {
-    const handleLogout = (e) => {
-      e.preventDefault();
-      dispatch(logoutUser());
-    };
-
-    return (
-      <div>
-        {`${user.name} logged in`}
-        <button type='button' onClick={handleLogout}>logout</button>
-      </div>
-    );
+  const handleLogout = (e) => {
+    e.preventDefault();
+    dispatch(logoutUser());
+    history.push('/login');
   };
-
-  const createBlogForm = () => (
-    <Togglable buttonLabel='new blog' ref={createBlogFormRef}>
-      <CreateBlogForm />
-    </Togglable>
-  );
-
-  const blogsList = () => {
-    return (
-      <div>
-        {blogs.map(blog =>
-          <Blog
-            key={blog.id}
-            blog={blog}
-            isRemovable={blog.user.username === user.username}
-          />
-        )}
-      </div>
-    );
-  };
-
-  const blogPosts = () => (
-    <div>
-      {blogsHeader()}
-      {notificationBox()}
-      {logoutButton()}
-      {createBlogForm()}
-      {blogsList()}
-    </div>
-  );
 
   return (
-    <>
-      {user === null && loginForm()}
-      {user !== null && blogPosts()}
-    </>
+    <div>
+      <p>{`${user.name} logged in`}</p>
+      <button type='button' onClick={handleLogout}>logout</button>
+    </div>
+  );
+};
+
+const App = () => {
+  const user = useSelector(({ user }) => user);
+
+  return (
+    <Router>
+      <AppHeader isLogin={user}/>
+      <NotificationBox />
+      {user && <LogoutButton user={user} />}
+
+      <Switch>
+        <Route path='/users'>
+          <UsersPage />
+        </Route>
+        <Route path='/login'>
+          {!user ? <LoginPage /> : <Redirect to='/' />}
+        </Route>
+        <Route path='/'>
+          {user ? <BlogsPage /> : <Redirect to='/login' />}
+        </Route>
+      </Switch>
+    </Router>
   );
 };
 

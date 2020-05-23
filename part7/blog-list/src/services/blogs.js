@@ -4,7 +4,7 @@ const baseUrl = 'http://localhost:3001/api/blogs';
 
 let token = null;
 
-const setUser = (userToken) => {
+const setToken = (userToken) => {
   token = userToken !== null ? `Bearer ${userToken}` : null;
 };
 
@@ -38,7 +38,7 @@ const deleteBlog = (blogId) => {
 };
 
 export default {
-  setUser,
+  setToken,
   getAll,
   createBlog,
   modifyBlog,

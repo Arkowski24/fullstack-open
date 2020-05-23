@@ -1,7 +1,13 @@
 import loginService from '../services/login';
 import { setNotification } from './notificationReducer';
 
-const reducer = (state = null, action) => {
+const getInitialUser = () => {
+  const loggedUserJSON = window.localStorage.getItem('loggedBlogsUser');
+  if(loggedUserJSON) return JSON.parse(loggedUserJSON);
+  else return null;
+};
+
+const reducer = (state = getInitialUser(), action) => {
   switch (action.type) {
   case 'USER_ADD':
     return action.data;
@@ -10,17 +16,6 @@ const reducer = (state = null, action) => {
   default:
     return state;
   }
-};
-
-export const initUser = () => {
-  return async (dispatch) => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogsUser');
-
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      dispatch({ type: 'USER_ADD', data: user });
-    }
-  };
 };
 
 export const loginUser = (username, password) => {

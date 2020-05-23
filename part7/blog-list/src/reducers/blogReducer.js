@@ -20,7 +20,7 @@ export const initBlogs = () => {
   return async (dispatch, getState) => {
     const { user } = getState();
     if(!user) return;
-    blogsService.setUser(user.token);
+    blogsService.setToken(user.token);
 
     const blogs = await blogsService.getAll();
     dispatch({ type: 'BLOG_INIT', data: blogs });
@@ -31,7 +31,7 @@ export const addBlog = (title, author, url) => {
   return async (dispatch, getState) => {
     try {
       const { user } = getState();
-      blogsService.setUser(user.token);
+      blogsService.setToken(user.token);
 
       const blog = await blogsService.createBlog(title, author, url);
       dispatch({ type: 'BLOG_ADD', data: blog });
@@ -46,7 +46,7 @@ export const modifyBlog = (modifiedBlog) => {
   return async (dispatch, getState) => {
     try {
       const { user } = getState();
-      blogsService.setUser(user.token);
+      blogsService.setToken(user.token);
 
       const blog = await blogsService.modifyBlog(modifiedBlog);
       dispatch({ type: 'BLOG_MODIFY', data: blog });
@@ -61,7 +61,7 @@ export const deleteBlog = (blogId) => {
   return async (dispatch, getState) => {
     try {
       const { user } = getState();
-      blogsService.setUser(user.token);
+      blogsService.setToken(user.token);
 
       await blogsService.deleteBlog(blogId);
       dispatch({ type: 'BLOG_DELETE', data: { id: blogId } });
