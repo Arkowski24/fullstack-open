@@ -2,11 +2,14 @@ import React  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Redirect, Route, Switch, useHistory } from 'react-router-dom';
 
+import NotificationBox from './components/NotificationBox';
 import LoginPage from './pages/LoginPage';
 import BlogsPage from './pages/BlogsPage';
 import UsersPage from './pages/UsersPage';
+import UserPage from './pages/UserPage';
+
 import { logoutUser } from './reducers/userReducer';
-import NotificationBox from './components/NotificationBox';
+
 
 const AppHeader = ({ user }) => (
   <>
@@ -37,11 +40,14 @@ const App = () => {
 
   return (
     <Router>
-      <AppHeader isLogin={user}/>
+      <AppHeader user={user}/>
       <NotificationBox />
       {user && <LogoutButton user={user} />}
 
       <Switch>
+        <Route path='/users/:id'>
+          <UserPage />
+        </Route>
         <Route path='/users'>
           <UsersPage />
         </Route>
