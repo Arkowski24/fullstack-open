@@ -64,6 +64,15 @@ const BlogRemove = ({ blog,  isRemovable, removeItem }) => {
   );
 };
 
+const BlogComments = ({ blog }) => (
+  <div className='blogComments'>
+    <h3>comments</h3>
+    <ul>
+      {blog.comments.map((b, i) => <li key={i}>{b}</li>) }
+    </ul>
+  </div>
+);
+
 const BlogPage = () => {
   const { id } = useParams();
   const blog = useSelector(({ blogs }) => blogs.find((b) => b.id === id));
@@ -86,6 +95,7 @@ const BlogPage = () => {
       <BlogLikes blog={blog} addLike={addLike}/>
       <BlogUser blog={blog}/>
       <BlogRemove blog={blog} isRemovable={isRemovable} removeItem={removeItem}/>
+      <BlogComments blog={blog}/>
     </div>
   );
 };
