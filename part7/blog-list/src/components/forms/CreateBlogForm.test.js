@@ -11,14 +11,14 @@ describe('<CreateBlogForm />', () => {
     author: 'Michael Chan',
     url: 'https://reactpatterns.com/',
   };
-  let addBlog;
+  let createBlog;
   let component;
 
 
   beforeEach(() => {
-    addBlog = jest.fn();
+    createBlog = jest.fn();
     component = render(
-      <CreateBlogForm addBlog={addBlog} />
+      <CreateBlogForm createBlog={createBlog} />
     );
   });
 
@@ -33,10 +33,10 @@ describe('<CreateBlogForm />', () => {
     fireEvent.change(url, { target: { value: blog.url } });
     fireEvent.submit(form);
 
-    expect(addBlog.mock.calls).toHaveLength(1);
-    expect(addBlog.mock.calls[0][0]).toBe(blog.title);
-    expect(addBlog.mock.calls[0][1]).toBe(blog.author);
-    expect(addBlog.mock.calls[0][2]).toBe(blog.url);
+    expect(createBlog.mock.calls).toHaveLength(1);
+    expect(createBlog.mock.calls[0][0]).toBe(blog.title);
+    expect(createBlog.mock.calls[0][1]).toBe(blog.author);
+    expect(createBlog.mock.calls[0][2]).toBe(blog.url);
   });
 
 });
