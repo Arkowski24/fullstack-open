@@ -1,6 +1,21 @@
-import React  from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import Container from '@material-ui/core/Container';
+
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  MenuItem,
+  Menu,
+  Button,
+  Typography
+} from '@material-ui/core';
+import { AccountCircle }  from '@material-ui/icons';
+import { makeStyles } from '@material-ui/core/styles';
+
+
 
 import NotificationBox from './components/NotificationBox';
 import LoginPage from './pages/LoginPage';
@@ -11,32 +26,81 @@ import UserPage from './pages/UserPage';
 
 import { logoutUser } from './reducers/userReducer';
 
+const useStyles = makeStyles(() => ({
+  rightButton: {
+    marginLeft: 'auto',
+  },
+}));
 
 const AppHeader = ({ user }) => (
-  <>
-    { user ? <h2>blog app</h2> : <h2>Log in to application</h2> }
-  </>
+  <Typography variant='h2'>
+    { user ? 'Blog App' : 'Log in to application' }
+  </Typography>
 );
 
 const NavigationBar = ({ user }) => {
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null);
   const dispatch = useDispatch();
   const history = useHistory();
+  const open = Boolean(anchorEl);
 
-  const handleLogout = (e) => {
-    e.preventDefault();
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
     dispatch(logoutUser());
     history.push('/login');
   };
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <div style={{ background: 'lightGrey' }}>
-      <Link to='/'>blogs</Link>
-      {' '}
-      <Link to='/users'>users</Link>
-      {' '}
-      {`${user.name} logged in `}
-      <button type='button' onClick={handleLogout}>logout</button>
-    </div>
+    <AppBar position="static">
+      <Toolbar>
+        <Button edge="start" color="inherit"  component={Link} to="/">
+          <Typography variant="h6">
+            Blogs
+          </Typography>
+        </Button>
+        <Button color="inherit"  component={Link} to="/users">
+          <Typography variant="h6">
+            Users
+          </Typography>
+        </Button>
+        {user && (
+          <div className={classes.rightButton}>
+            <IconButton
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem>{user.name}</MenuItem>
+              <MenuItem onClick={handleLogout}>Log out</MenuItem>
+            </Menu>
+          </div>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 };
 
@@ -51,7 +115,7 @@ const App = () => {
   const userExists = userMatch ? users.find(b => b.id === userMatch.params.id) : null;
 
   return (
-    <div>
+    <Container>
       {user && <NavigationBar user={user} />}
       <AppHeader user={user}/>
       <NotificationBox />
@@ -73,7 +137,7 @@ const App = () => {
           {user ? <BlogsPage /> : <Redirect to='/login' />}
         </Route>
       </Switch>
-    </div>
+    </Container>
   );
 };
 
