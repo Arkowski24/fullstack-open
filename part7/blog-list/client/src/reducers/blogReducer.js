@@ -72,4 +72,19 @@ export const deleteBlog = (blogId) => {
   };
 };
 
+export const createBlogComment = (blogId, content) => {
+  return async (dispatch, getState) => {
+    try {
+      const { user } = getState();
+      blogsService.setToken(user.token);
+
+      const blog = await blogsService.createBlogComment(blogId, content);
+      dispatch({ type: 'BLOG_MODIFY', data:  blog });
+      dispatch(setNotification('Comment added', false));
+    } catch (e) {
+      e.response && dispatch(setNotification(e.response.data.error, true));
+    }
+  };
+};
+
 export default reducer;

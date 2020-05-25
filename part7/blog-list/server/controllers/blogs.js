@@ -39,6 +39,7 @@ blogRouter.put('/:id', async (request, response) => {
     author: request.body.author,
     url: request.body.url,
     likes: request.body.likes,
+    comments: request.body.comments,
   };
 
   const result = await Blog
@@ -70,8 +71,8 @@ blogRouter.post('/:id/comments', async (request, response) => {
   const blog = await Blog.findById(id);
   if (blog === null) return response.status(404).end();
 
-  const newBlog = new Blog({ ...blog, comments: blog.comments.concat(request.body) });
-  const result = await newBlog.save();
+  blog.comments = blog.comments.concat(request.body.content);
+  const result = await blog.save();
   return response.status(200).json(result);
 });
 

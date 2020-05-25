@@ -37,10 +37,17 @@ const deleteBlog = (blogId) => {
   return axios.delete(`${baseUrl}/${blogId}`, config);
 };
 
+const createBlogComment = (blogId, content) => {
+  const payload = { content };
+  const request = axios.post(`${baseUrl}/${blogId}/comments`, payload );
+  return request.then(response => response.data);
+};
+
 export default {
   setToken,
   getAll,
   createBlog,
   modifyBlog,
-  deleteBlog
+  deleteBlog,
+  createBlogComment
 };

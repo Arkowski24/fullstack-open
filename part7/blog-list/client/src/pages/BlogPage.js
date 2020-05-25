@@ -1,8 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { deleteBlog, initBlogs, modifyBlog } from '../reducers/blogReducer';
+import {
+  createBlogComment,
+  deleteBlog,
+  initBlogs,
+  modifyBlog
+} from '../reducers/blogReducer';
 
 const BlogHeader = ({ blog }) => (
   <div className='blogTitle'>
@@ -12,7 +17,7 @@ const BlogHeader = ({ blog }) => (
 
 const BlogUrl= ({ blog }) => (
   <div className='blogUrl'>
-    {blog.url}
+    <a href={blog.url}>{blog.url}</a>
   </div>
 );
 
@@ -64,20 +69,39 @@ const BlogRemove = ({ blog,  isRemovable, removeItem }) => {
   );
 };
 
-const BlogComments = ({ blog }) => (
-  <div className='blogComments'>
-    <h3>comments</h3>
-    <ul>
-      {blog.comments.map((b, i) => <li key={i}>{b}</li>) }
-    </ul>
-  </div>
-);
+const BlogComments = ({ blog, addBlogComment, commentFormState }) => {
+  const [commentFormInput, setCommentFormInput] = commentFormState;
+  const handleCreateComment = (e) => {
+    e.preventDefault();
+    addBlogComment(commentFormInput);
+  };
+
+  return (
+    <div className='blogComments'>
+      <h3>comments</h3>
+      <div>
+        <form onSubmit={handleCreateComment}>
+          <input
+            type='text'
+            value={commentFormInput}
+            onChange={(e) => setCommentFormInput(e.target.value)}
+          />
+          <button type='submit'>add comment</button>
+        </form>
+      </div>
+      <ul>
+        {blog.comments.map((b, i) => <li key={i}>{b}</li>) }
+      </ul>
+    </div>
+  );
+};
 
 const BlogPage = () => {
   const { id } = useParams();
   const blog = useSelector(({ blogs }) => blogs.find((b) => b.id === id));
   const user = useSelector(({ user }) => user);
   const dispatch = useDispatch();
+  const commentFormState = useState('');
 
   useEffect(() => {
     dispatch(initBlogs());
@@ -85,6 +109,7 @@ const BlogPage = () => {
 
   const addLike = () => dispatch(modifyBlog({ ...blog, likes: blog.likes + 1 }));
   const removeItem = () => dispatch(deleteBlog(blog.id));
+  const addBlogComment = (content) => dispatch(createBlogComment(blog.id, content));
 
   if(!user || !blog) return null;
   const isRemovable = blog.user.username === user.username;
@@ -95,7 +120,7 @@ const BlogPage = () => {
       <BlogLikes blog={blog} addLike={addLike}/>
       <BlogUser blog={blog}/>
       <BlogRemove blog={blog} isRemovable={isRemovable} removeItem={removeItem}/>
-      <BlogComments blog={blog}/>
+      <BlogComments blog={blog} addBlogComment={addBlogComment} commentFormState={commentFormState}/>
     </div>
   );
 };
