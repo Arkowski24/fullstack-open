@@ -1,24 +1,24 @@
 import React  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { Link, Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 
 import NotificationBox from './components/NotificationBox';
 import LoginPage from './pages/LoginPage';
 import BlogsPage from './pages/BlogsPage';
+import BlogPage from './pages/BlogPage';
 import UsersPage from './pages/UsersPage';
 import UserPage from './pages/UserPage';
 
 import { logoutUser } from './reducers/userReducer';
-import BlogPage from './pages/BlogPage';
 
 
 const AppHeader = ({ user }) => (
   <>
-    { user ? <h2>blogs</h2> : <h2>Log in to application</h2> }
+    { user ? <h2>blog app</h2> : <h2>Log in to application</h2> }
   </>
 );
 
-const LogoutButton = ({ user }) => {
+const NavigationBar = ({ user }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -29,8 +29,12 @@ const LogoutButton = ({ user }) => {
   };
 
   return (
-    <div>
-      <p>{`${user.name} logged in`}</p>
+    <div style={{ background: 'lightGrey' }}>
+      <Link to='/'>blogs</Link>
+      {' '}
+      <Link to='/users'>users</Link>
+      {' '}
+      {`${user.name} logged in `}
       <button type='button' onClick={handleLogout}>logout</button>
     </div>
   );
@@ -48,9 +52,9 @@ const App = () => {
 
   return (
     <div>
+      {user && <NavigationBar user={user} />}
       <AppHeader user={user}/>
       <NotificationBox />
-      {user && <LogoutButton user={user} />}
 
       <Switch>
         <Route path='/users/:id'>
