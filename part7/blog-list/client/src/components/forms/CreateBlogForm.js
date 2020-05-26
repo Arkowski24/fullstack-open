@@ -1,8 +1,23 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
+import {
+  TextField,
+  Typography,
+  Grid
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+
+
+const useStyles = makeStyles(() => ({
+  formItem: {
+    margin: '2px',
+  },
+}));
 
 const CreateBlogForm = ({ createBlog }) => {
+  const classes = useStyles();
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
@@ -18,43 +33,51 @@ const CreateBlogForm = ({ createBlog }) => {
 
   return (
     <div>
-      <h2>create new</h2>
       <form id='createBlogForm' onSubmit={handleCreate}>
-        <div>
-          title:
-          <input
-            id='createBlogFormTitle'
-            type='text'
-            value={title}
-            name='Title'
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            id='createBlogFormAuthor'
-            type='text'
-            value={author}
-            name='Author'
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            id='createBlogFormUrl'
-            type='text'
-            value={url}
-            name='Url'
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button
-          id='createBlogFormButton'
-          type='submit'>
+        <Grid
+          container
+          direction="column"
+          justify="center"
+        >
+          <Typography variant="h5" className={classes.formItem}>
+              Create new blog
+          </Typography>
+          <div className={classes.formItem}>
+            <TextField
+              id='createBlogFormTitle'
+              label='Title'
+              type='text'
+              value={title}
+              onChange={({ target }) => setTitle(target.value)}
+            />
+          </div>
+          <div className={classes.formItem}>
+            <TextField
+              id='createBlogFormAuthor'
+              label='Author'
+              type='text'
+              value={author}
+              onChange={({ target }) => setAuthor(target.value)}
+            />
+          </div>
+          <div className={classes.formItem}>
+            <TextField
+              id='createBlogFormUrl'
+              label='URL'
+              type='text'
+              value={url}
+              onChange={({ target }) => setUrl(target.value)}
+            />
+          </div>
+          <Button
+            id='createBlogFormButton'
+            className={classes.formItem}
+            type='submit'
+            variant="contained" color="primary"
+          >
           create
-        </button>
+          </Button>
+        </Grid>
       </form>
     </div>
   );

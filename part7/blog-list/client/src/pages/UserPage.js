@@ -2,7 +2,18 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  Typography,
+} from '@material-ui/core';
+import { Book as BookIcon } from '@material-ui/icons';
+
 import { initUsers } from '../reducers/usersReducer';
+
 
 const UserPage = () => {
   const { id } = useParams();
@@ -15,13 +26,18 @@ const UserPage = () => {
 
   if(!user) return null;
   return(
-    <div>
-      <h2>{user.name}</h2>
-      <p><b>added blogs</b></p>
-      <ul>
-        {user.blogs.map((b) => <li key={b.title}>{b.title}</li>)}
-      </ul>
-    </div>
+    <Paper style={{ padding: '5px' }}>
+      <Typography variant='h4'>{user.name}</Typography>
+      <Typography>Added blogs:</Typography>
+      <List>
+        {user.blogs.map((b, i) => (
+          <ListItem key={i}>
+            <ListItemIcon><BookIcon /></ListItemIcon>
+            <ListItemText>{b.title}</ListItemText>
+          </ListItem>
+        ))}
+      </List>
+    </Paper>
   );
 };
 

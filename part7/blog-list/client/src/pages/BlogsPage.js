@@ -1,8 +1,18 @@
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
+import {
+  Grid,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper
+} from '@material-ui/core';
 import Togglable from '../components/Togglable';
-import Blog from '../components/Blog';
 import CreateBlogForm from '../components/forms/CreateBlogForm';
 
 import { addBlog, initBlogs } from '../reducers/blogReducer';
@@ -23,17 +33,27 @@ const CreateBlog = () => {
   );
 };
 
-const BlogsList = ({ user, blogs }) => {
+const BlogsList = ({ blogs }) => {
+  const history = useHistory();
   return (
-    <div>
-      {blogs.map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          isRemovable={blog.user.username === user.username}
-        />
-      )}
-    </div>
+    <TableContainer component={Paper}>
+      <Table stickyHeader>
+        <TableHead >
+          <TableRow>
+            <TableCell>Title</TableCell>
+            <TableCell>Author</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {blogs.map(blog => (
+            <TableRow key={blog.id} hover onClick={(() => history.push(`/blogs/${blog.id}`))}>
+              <TableCell>{blog.title}</TableCell>
+              <TableCell>{blog.author}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
@@ -51,10 +71,14 @@ const BlogsPage = () => {
   },[dispatch]);
 
   return (
-    <div>
-      <CreateBlog />
-      <BlogsList user={user} blogs={blogs} />
-    </div>
+    <Grid container spacing={1}>
+      <Grid container item>
+        <CreateBlog />
+      </Grid>
+      <Grid container item>
+        <BlogsList user={user} blogs={blogs} />
+      </Grid>
+    </Grid>
   );
 };
 

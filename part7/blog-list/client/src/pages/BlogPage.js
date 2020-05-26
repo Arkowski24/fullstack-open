@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+
+import {
+  Paper,
+  Typography,
+  Grid,
+  Button,
+  IconButton,
+  TextField,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon
+} from '@material-ui/core';
+import { Comment as CommentIcon, ThumbUp as ThumbUpIcon } from '@material-ui/icons';
 
 import {
   createBlogComment,
@@ -9,16 +23,17 @@ import {
   modifyBlog
 } from '../reducers/blogReducer';
 
+
 const BlogHeader = ({ blog }) => (
-  <div className='blogTitle'>
-    <h1>{`${blog.title} ${blog.author} `}</h1>
-  </div>
+  <Typography className='blogTitle' variant='h4'>
+    {`${blog.title} ${blog.author}`}
+  </Typography>
 );
 
 const BlogUrl= ({ blog }) => (
-  <div className='blogUrl'>
-    <a href={blog.url}>{blog.url}</a>
-  </div>
+  <Typography className='blogUrl' component={Link} to={blog.url}>
+    {blog.url}
+  </Typography>
 );
 
 const BlogLikes = ({ blog, addLike }) => {
@@ -28,23 +43,21 @@ const BlogLikes = ({ blog, addLike }) => {
   };
 
   return (
-    <div className='blogLikes'>
-      {`likes ${blog.likes} `}
-      <button
-        className='blogLikeButton'
-        type='button'
-        onClick={handleLikeButtonClick}
-      >
-        like
-      </button>
-    </div>
+    <Grid container className='blogLikes'>
+      <Typography>
+        {`Likes: ${blog.likes}`}
+        <IconButton className='blogLikeButton' type='button' onClick={handleLikeButtonClick}>
+          <ThumbUpIcon />
+        </IconButton>
+      </Typography>
+    </Grid>
   );
 };
 
 const BlogUser = ({ blog }) => (
-  <div className='blogUser'>
-    {`added by ${blog.user.name}`}
-  </div>
+  <Typography className='blogUser'>
+    {`Added by: ${blog.user.name}`}
+  </Typography>
 );
 
 const BlogRemove = ({ blog,  isRemovable, removeItem }) => {
@@ -58,13 +71,14 @@ const BlogRemove = ({ blog,  isRemovable, removeItem }) => {
 
   return (
     <div className='blogRemove'>
-      <button
+      <Button
         className='blogRemoveButton'
         type='button'
         onClick={handleDeleteButtonClick}
+        variant="contained" color="secondary"
       >
-      remove
-      </button>
+      Remove
+      </Button>
     </div>
   );
 };
@@ -78,20 +92,27 @@ const BlogComments = ({ blog, addBlogComment, commentFormState }) => {
 
   return (
     <div className='blogComments'>
-      <h3>comments</h3>
+      <Typography variant='h4'>Comments</Typography>
       <div>
         <form onSubmit={handleCreateComment}>
-          <input
+          <TextField
             type='text'
             value={commentFormInput}
             onChange={(e) => setCommentFormInput(e.target.value)}
           />
-          <button type='submit'>add comment</button>
+          <Button type='submit'>Add comment</Button>
         </form>
       </div>
-      <ul>
-        {blog.comments.map((b, i) => <li key={i}>{b}</li>) }
-      </ul>
+      <List>
+        {blog.comments.map((b, i) => (
+          <ListItem key={i}>
+            <ListItemIcon >
+              <CommentIcon />
+            </ListItemIcon>
+            <ListItemText>{b}</ListItemText>
+          </ListItem>
+        ))}
+      </List>
     </div>
   );
 };
@@ -114,14 +135,30 @@ const BlogPage = () => {
   if(!user || !blog) return null;
   const isRemovable = blog.user.username === user.username;
   return (
-    <div className='blog'>
-      <BlogHeader blog={blog}/>
-      <BlogUrl blog={blog}/>
-      <BlogLikes blog={blog} addLike={addLike}/>
-      <BlogUser blog={blog}/>
-      <BlogRemove blog={blog} isRemovable={isRemovable} removeItem={removeItem}/>
-      <BlogComments blog={blog} addBlogComment={addBlogComment} commentFormState={commentFormState}/>
-    </div>
+    <Paper className='blog' style={{ marginTop: '15px' }}>
+      <Grid container direction="column" spacing={3} style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+        <Grid container item>
+          <Grid container item>
+            <BlogHeader blog={blog}/>
+          </Grid>
+          <Grid container item>
+            <BlogUrl blog={blog}/>
+          </Grid>
+          <Grid container item>
+            <BlogLikes blog={blog} addLike={addLike}/>
+          </Grid>
+          <Grid container item>
+            <BlogUser blog={blog}/>
+          </Grid>
+          <Grid container item>
+            <BlogRemove blog={blog} isRemovable={isRemovable} removeItem={removeItem}/>
+          </Grid>
+        </Grid>
+        <Grid container item>
+          <BlogComments blog={blog} addBlogComment={addBlogComment} commentFormState={commentFormState}/>
+        </Grid>
+      </Grid>
+    </Paper>
   );
 };
 

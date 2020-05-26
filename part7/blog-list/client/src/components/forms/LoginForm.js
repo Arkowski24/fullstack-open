@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
+import { Button, Grid, TextField, Paper } from '@material-ui/core';
+
+
 const LoginForm = ({ loginUser }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -14,31 +17,37 @@ const LoginForm = ({ loginUser }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
+    <Paper style={{ padding: '5px', marginTop: '5px' }}>
+      <form id='createBlogForm' onSubmit={handleLogin}>
+        <Grid
+          container
+          direction="column"
+          justify="center"
+        >
+          <TextField
             id='username'
+            label='Username'
             type='text'
             value={username}
-            name='Username'
             onChange={({ target }) => setUsername(target.value)}
           />
-        </div>
-        <div>
-          password
-          <input
+          <TextField
             id='password'
+            label='Password'
             type='password'
             value={password}
-            name='Password'
             onChange={({ target }) => setPassword(target.value)}
           />
-        </div>
-        <button id='loginFormButton' type='submit'>login</button>
+          <Button
+            id='loginFormButton'
+            type='submit'
+            variant="contained" color="primary"
+          >
+            Login
+          </Button>
+        </Grid>
       </form>
-    </div>
+    </Paper>
   );
 };
 

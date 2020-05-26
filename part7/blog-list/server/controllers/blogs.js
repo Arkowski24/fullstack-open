@@ -72,7 +72,8 @@ blogRouter.post('/:id/comments', async (request, response) => {
   if (blog === null) return response.status(404).end();
 
   blog.comments = blog.comments.concat(request.body.content);
-  const result = await blog.save();
+  await blog.save();
+  const result = await Blog.findById(id).populate('user', { blogs: 0 });
   return response.status(200).json(result);
 });
 
