@@ -58,9 +58,8 @@ const typeDefs = gql`
 
 const resolvers = {
   Author: {
-    bookCount: (root) => books
-      .filter(b => b.author === root.name)
-      .length
+    bookCount: (root) => Book.find({ author: { $in: [root._id] } })
+      .then(r => r.length)
   },
 
   Query: {
@@ -68,26 +67,30 @@ const resolvers = {
       .then(r => r.length),
     bookCount: () => Book.find({})
       .then(r => r.length),
-    allBooks: (root, args) => Book.find({}),
+    allBooks: (root, args) =>
+      Book.find(args.genre ? { genres: args.genre } : {})
+        .populate('author')
+        .then(books => books.filter(b => b.author.name === args.author))
+    ,
     allAuthors: () => Author.find({})
   },
 
   Mutation: {
     addBook: async (root, args) => {
-      let author = await Author.find({ name: args.author });
+      let author = await Author.findOne({ name: args.author });
       if (!author) {
         author = await Author({ name: args.author })
           .save();
       }
 
-      return Book({
+      const book = Book({
         ...args,
-        author
-      })
-        .save();
+        author: author._id
+      });
+      return book.save();
     },
     editAuthor: async (root, args) => {
-      const author = await Author.find({ name: args.author });
+      const author = await Author.findOne({ name: args.author });
       if (!author) return null;
 
       author.born = args.setBornTo;
