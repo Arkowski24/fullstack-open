@@ -91,7 +91,7 @@ const resolvers = {
     allBooks: (root, args) =>
       Book.find(args.genre ? { genres: args.genre } : {})
         .populate('author')
-        .then(books => books.filter(b => b.author.name === args.author))
+        .then(books => args.author ? books.filter(b => b.author.name === args.author) : books)
     ,
     allAuthors: () => Author.find({}),
     me: (root, args, context) => context.currentUser
