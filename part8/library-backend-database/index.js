@@ -112,6 +112,10 @@ const resolvers = {
         author: author._id
       });
       return book.save()
+        .then(b => Author.populate(b, {
+          path: 'author',
+          model: 'Author'
+        }))
         .catch(error => {
           throw new UserInputError(error.message, { invalidArgs: args });
         });
