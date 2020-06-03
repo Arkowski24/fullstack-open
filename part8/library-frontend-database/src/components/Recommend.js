@@ -11,7 +11,7 @@ const Recommend = ({ show, favouriteGenre }) => {
   if (!show) {
     return null;
   }
-  if (result.loading) {
+  if (!result.data && result.loading) {
     return <div>loading...</div>;
   }
 
