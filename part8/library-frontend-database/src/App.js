@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useApolloClient, useLazyQuery } from '@apollo/client';
+import { useApolloClient, useLazyQuery, useSubscription } from '@apollo/client';
 
 import Authors from './components/Authors';
 import Books from './components/Books';
@@ -7,7 +7,7 @@ import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
 import Recommend from './components/Recommend';
 
-import { ME } from './queries';
+import { BOOK_ADDED, ME } from './queries';
 
 
 const App = () => {
@@ -34,6 +34,13 @@ const App = () => {
     const token = localStorage.getItem('user-token');
     setToken(token);
   }, []);
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const book = subscriptionData.data.bookAdded;
+      window.alert(`book added: ${book.title} by ${book.author.name}`);
+    }
+  });
 
   const handleLogout = () => {
     setToken(null);
