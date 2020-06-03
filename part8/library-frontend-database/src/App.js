@@ -40,7 +40,7 @@ const App = () => {
     localStorage.clear();
     client.resetStore();
   };
-  
+
   return (
     <div>
       <div>

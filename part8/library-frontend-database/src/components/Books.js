@@ -45,7 +45,7 @@ const Books = (props) => {
         </tbody>
       </table>
       <div>
-        {genres.map(g => <button type='button' onClick={() => setGenreFilter(g)}>{g}</button>)}
+        {genres.map(g => <button key={g} type='button' onClick={() => setGenreFilter(g)}>{g}</button>)}
         <button type='button' onClick={() => setGenreFilter('')}>all genres</button>
       </div>
     </div>

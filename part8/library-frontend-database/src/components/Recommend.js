@@ -4,7 +4,9 @@ import { useQuery } from '@apollo/client';
 import { ALL_BOOKS } from '../queries';
 
 const Recommend = ({ show, favouriteGenre }) => {
-  const result = useQuery(ALL_BOOKS);
+  const result = useQuery(ALL_BOOKS,
+    { variables: { genre: favouriteGenre } }
+  );
 
   if (!show) {
     return null;
