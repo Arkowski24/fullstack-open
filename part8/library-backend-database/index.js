@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const pubsub = new PubSub();
 
 const config = require('./utils/config');
-
+const loaders = require('./utils/loaders');
 
 const Author = require('./models/author');
 const Book = require('./models/book');
@@ -85,7 +85,8 @@ const typeDefs = gql`
 
 const resolvers = {
   Author: {
-    bookCount: (root) => Book.find({ author: { $in: [root._id] } })
+    bookCount: ({ _id }, _args, { loaders }) => loaders.authorBooksLoader
+      .load(_id)
       .then(r => r.length)
   },
 
@@ -173,6 +174,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => {
+    const context = { loaders };
     const auth = req ? req.headers.authorization : null;
     if (auth && auth.toLowerCase()
       .startsWith('bearer ')) {
@@ -180,8 +182,12 @@ const server = new ApolloServer({
         auth.substring(7), config.JWT_SECRET
       );
       const currentUser = await User.findById(decodedToken.id);
-      return { currentUser };
+      return {
+        ...context,
+        currentUser
+      };
     }
+    return context;
   }
 });
 
