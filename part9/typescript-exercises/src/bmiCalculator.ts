@@ -1,3 +1,22 @@
+interface BmiInput {
+    heightInCm: number,
+    weightInKg: number
+}
+
+const parseBmiArguments = (args: Array<string>): BmiInput => {
+    if (args.length < 4) throw new Error('Not enough arguments');
+    if (args.length > 4) throw new Error('Too many arguments');
+
+    if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+        return {
+            heightInCm: Number(args[2]),
+            weightInKg: Number(args[3])
+        }
+    } else {
+        throw new Error('Provided values were not numbers!');
+    }
+};
+
 type BmiCategory = 'Very severely underweight'
     | 'Severely underweight'
     | 'Underweight'
@@ -19,4 +38,11 @@ const calculateBmi = (heightInCm: number, weightInKg: number): BmiCategory => {
     return 'Obese Class III (Very severely obese)';
 }
 
-console.log(calculateBmi(180, 74));
+try {
+    const {heightInCm, weightInKg} = parseBmiArguments(process.argv);
+    const result = calculateBmi(heightInCm, weightInKg);
+    console.log(result);
+} catch (e) {
+    console.log('Error: ', e.message);
+}
+
