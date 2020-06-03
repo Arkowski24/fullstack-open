@@ -7,7 +7,7 @@ import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
 import Recommend from './components/Recommend';
 
-import { BOOK_ADDED, ME } from './queries';
+import { ALL_BOOKS, BOOK_ADDED, ME } from './queries';
 
 
 const App = () => {
@@ -35,10 +35,24 @@ const App = () => {
     setToken(token);
   }, []);
 
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) =>
+      set.map(p => p.id)
+        .includes(object.id);
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS });
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks: dataInStore.allBooks.concat(addedBook) }
+      });
+    }
+  };
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
-      const book = subscriptionData.data.bookAdded;
-      window.alert(`book added: ${book.title} by ${book.author.name}`);
+      const addedBook = subscriptionData.data.bookAdded;
+      updateCacheWith(addedBook);
     }
   });
 
@@ -73,6 +87,7 @@ const App = () => {
 
       <NewBook
         show={page === 'add'}
+        updateCacheWith={updateCacheWith}
       />
 
       <Recommend
