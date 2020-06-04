@@ -26,7 +26,7 @@ type BmiCategory = 'Very severely underweight'
     | 'Obese Class II (Severely obese)'
     | 'Obese Class III (Very severely obese)';
 
-const calculateBmi = (heightInCm: number, weightInKg: number): BmiCategory => {
+export const calculateBmi = (heightInCm: number, weightInKg: number): BmiCategory => {
     const bmi = weightInKg / Math.pow(heightInCm / 100, 2);
     if (bmi < 15.0) return 'Very severely underweight';
     if (bmi < 16.0) return 'Severely underweight';
@@ -38,10 +38,12 @@ const calculateBmi = (heightInCm: number, weightInKg: number): BmiCategory => {
     return 'Obese Class III (Very severely obese)';
 }
 
-try {
-    const {heightInCm, weightInKg} = parseBmiArguments(process.argv);
-    const result = calculateBmi(heightInCm, weightInKg);
-    console.log(result);
-} catch (e) {
-    console.log('Error: ', e.message);
+if (typeof require !== 'undefined' && require.main === module) {
+    try {
+        const {heightInCm, weightInKg} = parseBmiArguments(process.argv);
+        const result = calculateBmi(heightInCm, weightInKg);
+        console.log(result);
+    } catch (e) {
+        console.log('Error: ', e.message);
+    }
 }

@@ -7,8 +7,8 @@
     "ts-node": "ts-node",
     "calculateBmi": "ts-node src/bmiCalculator.ts",
     "calculateExercises": "ts-node src/exerciseCalculator.ts",
-    "start": "ts-node src/index.ts",
-    "dev": "ts-node-dev src/index.ts"
+    "start": "ts-node src/index.ts --",
+    "dev": "ts-node-dev src/index.ts --"
   },
   "author": "",
   "license": "ISC",
