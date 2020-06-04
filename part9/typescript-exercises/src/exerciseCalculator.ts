@@ -12,7 +12,7 @@ const parseExerciseArguments = (args: Array<string>): ExercisesInput => {
     return {
         dailyExerciseHours: numbers.slice(1),
         targetDailyHours: numbers[0]
-    }
+    };
 };
 
 interface Result {
@@ -51,5 +51,9 @@ try {
     const result = calculateExercises(dailyExerciseHours, targetDailyHours);
     console.log(result);
 } catch (e) {
-    console.log('Error: ', e.message);
+    if (e instanceof Error) {
+        console.log('Error: ', e.message);
+    } else {
+        throw e;
+    }
 }

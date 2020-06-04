@@ -11,7 +11,7 @@ const parseBmiArguments = (args: Array<string>): BmiInput => {
         return {
             heightInCm: Number(args[2]),
             weightInKg: Number(args[3])
-        }
+        };
     } else {
         throw new Error('Provided values were not numbers!');
     }
@@ -34,9 +34,9 @@ export const calculateBmi = (heightInCm: number, weightInKg: number): BmiCategor
     if (bmi < 25.0) return 'Normal (healthy weight)';
     if (bmi < 30.0) return 'Overweight';
     if (bmi < 35.0) return 'Obese Class I (Moderately obese)';
-    if (bmi < 40.0) return 'Obese Class II (Severely obese)'
+    if (bmi < 40.0) return 'Obese Class II (Severely obese)';
     return 'Obese Class III (Very severely obese)';
-}
+};
 
 if (typeof require !== 'undefined' && require.main === module) {
     try {
@@ -44,6 +44,10 @@ if (typeof require !== 'undefined' && require.main === module) {
         const result = calculateBmi(heightInCm, weightInKg);
         console.log(result);
     } catch (e) {
-        console.log('Error: ', e.message);
+        if (e instanceof Error) {
+            console.log('Error: ', e.message);
+        } else {
+            throw e;
+        }
     }
 }

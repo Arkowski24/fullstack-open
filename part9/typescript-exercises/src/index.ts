@@ -17,13 +17,17 @@ app.get('/bmi', (req, res) => {
 
         const payload = {height, weight, bmi};
         res.json(payload);
-    } catch (error) {
-        const payload = {error: error.message}
-        res.json(payload).status(400);
+    } catch (e) {
+        if (e instanceof Error) {
+            const payload = {error: e.message};
+            res.json(payload).status(400);
+        } else {
+            throw e;
+        }
     }
 });
 
 const PORT = 3003;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+    console.log(`Server running on port ${PORT}`);
 });
