@@ -1,4 +1,4 @@
-interface ExercisesInput {
+export interface ExercisesInput {
     dailyExerciseHours: Array<number>,
     targetDailyHours: number
 }
@@ -7,7 +7,7 @@ const parseExerciseArguments = (args: Array<string>): ExercisesInput => {
     if (args.length < 4) throw new Error('Not enough arguments');
     args = args.slice(2);
     const numbers = args.map(a => Number(a));
-    const nans = numbers.filter(n => isNaN(n) || !isFinite(n));
+    const nans = numbers.filter(n => !isFinite(n));
     if (nans.length > 0) throw new Error('Provided non-finite number');
     return {
         dailyExerciseHours: numbers.slice(1),
@@ -15,7 +15,7 @@ const parseExerciseArguments = (args: Array<string>): ExercisesInput => {
     };
 };
 
-interface Result {
+export interface Result {
     periodLength: number,
     trainingDays: number,
     success: boolean,
@@ -25,7 +25,7 @@ interface Result {
     average: number
 }
 
-const calculateExercises = (dailyExerciseHours: Array<number>, targetDailyHours: number): Result => {
+export const calculateExercises = (dailyExerciseHours: Array<number>, targetDailyHours: number): Result => {
     const periodLength = dailyExerciseHours.length;
     const trainingDays = dailyExerciseHours.filter(h => h > 0).length;
     const successDays = dailyExerciseHours.filter(h => h >= targetDailyHours).length;
@@ -46,14 +46,16 @@ const calculateExercises = (dailyExerciseHours: Array<number>, targetDailyHours:
     };
 };
 
-try {
-    const {dailyExerciseHours, targetDailyHours} = parseExerciseArguments(process.argv);
-    const result = calculateExercises(dailyExerciseHours, targetDailyHours);
-    console.log(result);
-} catch (e) {
-    if (e instanceof Error) {
-        console.log('Error: ', e.message);
-    } else {
-        throw e;
+if (typeof require !== 'undefined' && require.main === module) {
+    try {
+        const {dailyExerciseHours, targetDailyHours} = parseExerciseArguments(process.argv);
+        const result = calculateExercises(dailyExerciseHours, targetDailyHours);
+        console.log(result);
+    } catch (e) {
+        if (e instanceof Error) {
+            console.log('Error: ', e.message);
+        } else {
+            throw e;
+        }
     }
 }
