@@ -6,13 +6,20 @@
   "scripts": {
     "ts-node": "ts-node",
     "calculateBmi": "ts-node src/bmiCalculator.ts",
-    "calculateExercises": "ts-node src/exerciseCalculator.ts"
+    "calculateExercises": "ts-node src/exerciseCalculator.ts",
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node-dev src/index.ts"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/express": "^4.17.6",
     "@types/node": "^14.0.9",
     "ts-node": "^8.10.2",
+    "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.9.3"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
