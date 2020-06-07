@@ -1,6 +1,7 @@
 import React from "react";
 import {CoursePart} from "../types";
 
+
 interface TotalProps {
     courseParts: CoursePart[]
 }
