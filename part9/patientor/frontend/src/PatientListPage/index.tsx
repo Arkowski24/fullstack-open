@@ -1,4 +1,5 @@
 import React from "react";
+import {useHistory} from "react-router-dom";
 import axios from "axios";
 import { Container, Table, Button } from "semantic-ui-react";
 
@@ -10,6 +11,7 @@ import HealthRatingBar from "../components/HealthRatingBar";
 import { useStateValue } from "../state";
 
 const PatientListPage: React.FC = () => {
+  const history = useHistory();
   const [{ patients }, dispatch] = useStateValue();
 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
@@ -52,7 +54,7 @@ const PatientListPage: React.FC = () => {
         </Table.Header>
         <Table.Body>
           {Object.values(patients).map((patient: Patient) => (
-            <Table.Row key={patient.id}>
+            <Table.Row key={patient.id} onClick={() => history.push(`/patients/${patient.id}`)}>
               <Table.Cell>{patient.name}</Table.Cell>
               <Table.Cell>{patient.gender}</Table.Cell>
               <Table.Cell>{patient.occupation}</Table.Cell>
