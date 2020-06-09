@@ -3,7 +3,7 @@ import {useHistory, useParams} from "react-router-dom";
 import {Header, Icon} from "semantic-ui-react";
 import axios from "axios";
 
-import {useStateValue} from "../state";
+import {updatePatient, useStateValue} from "../state";
 import {apiBaseUrl} from "../constants";
 import {Gender} from "../types";
 
@@ -17,7 +17,7 @@ const PatientPage: React.FC = () => {
     useEffect(() => {
         if (!patient || !patient.ssn) {
             axios.get(`${apiBaseUrl}/patients/${id}`)
-                .then(res => dispatch({type: "UPDATE_PATIENT", payload: res.data}))
+                .then(res => dispatch(updatePatient(res.data)))
                 .catch(e => {
                     console.error(e.response.data);
                     history.push('/');
