@@ -8,6 +8,24 @@ import {apiBaseUrl} from "../constants";
 import {Entry, Gender} from "../types";
 
 
+const EntryDetails: React.FC<{entry: Entry}> = ({entry}) => {
+    const [{diagnoses}] = useStateValue();
+
+    const getCodeDetail = (diagnosisCode: string) => (
+        <li key={diagnosisCode}>
+            {diagnoses[diagnosisCode] ? `${diagnosisCode} ${diagnoses[diagnosisCode].name}` : diagnosisCode}
+        </li>
+    );
+    return (
+        <div>
+            {`${entry.date} ${entry.description}`}
+            <ul>
+                {entry.diagnosisCodes?.map((dc: string) => getCodeDetail(dc))}
+            </ul>
+        </div>
+    );
+};
+
 const PatientPage: React.FC = () => {
     const history = useHistory();
     const {id} = useParams<{ id: string }>();
@@ -42,15 +60,6 @@ const PatientPage: React.FC = () => {
         }
     };
 
-    const getEntry = (entry: Entry) => (
-        <div key={entry.id}>
-            {`${entry.date} ${entry.description}`}
-            <ul>
-                {entry.diagnosisCodes?.map((dc: string) => <li key={dc}>{dc}</li>)}
-            </ul>
-        </div>
-    );
-
     if (!patient || !patient.ssn) return null;
     return (
         <div className="App">
@@ -61,7 +70,7 @@ const PatientPage: React.FC = () => {
             {`ssn: ${patient.ssn}`}<br/>
             {`occupation: ${patient.occupation}`}
             <Header as="h3">entries</Header>
-            {patient.entries.map(entry => getEntry(entry))}
+            {patient.entries.map(entry => <EntryDetails key={entry.id} entry={entry}/> )}
         </div>
     );
 };
