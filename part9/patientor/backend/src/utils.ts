@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Gender, NewPatient} from "./types";
+import {Entry, Gender, NewPatient} from "./types";
 
 const isString = (text: any): text is string => {
     return typeof text === 'string' || text instanceof String;
+};
+
+const isArray = (array: any): array is Array<any> => {
+    return array instanceof Array;
 };
 
 const isDate = (date: string): boolean => {
@@ -11,6 +15,20 @@ const isDate = (date: string): boolean => {
 
 const isGender = (param: any): param is Gender => {
     return Object.values(Gender).includes(param);
+};
+
+const isEntry = (param : any): param is Entry => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    switch (param.type) {
+        case "HealthCheck":
+            return true;
+        case "Hospital":
+            return true;
+        case "OccupationalHealthcare":
+            return true;
+        default:
+            return false;
+    }
 };
 
 const parseName = (name: any): string => {
@@ -48,16 +66,34 @@ const parseOccupation = (occupation: any): string => {
     return occupation;
 };
 
+const parseEntry = (entry: any): Entry => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (!entry || !isEntry(entry)) {
+        throw new Error('Incorrect entry');
+    }
+    return entry;
+};
+
+const parseEntries = (entries: any): Entry[] => {
+    if (!entries) {
+        return [];
+    }
+    if(!isArray(entries)) {
+        throw new Error('Incorrect entries');
+    }
+    return entries.map(e => parseEntry(e));
+};
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const toNewPatient = (object: any): NewPatient => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const {name, dateOfBirth, ssn, gender, occupation} = object;
+    const {name, dateOfBirth, ssn, gender, occupation, entries} = object;
     return {
         name: parseName(name),
         dateOfBirth: parseDateOfBirth(dateOfBirth),
         ssn: parseSSN(ssn),
         gender: parseGender(gender),
         occupation: parseOccupation(occupation),
-        entries: []
+        entries: parseEntries(entries)
     };
 };
