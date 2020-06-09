@@ -5,7 +5,7 @@ import axios from "axios";
 
 import {updatePatient, useStateValue} from "../state";
 import {apiBaseUrl} from "../constants";
-import {Gender} from "../types";
+import {Entry, Gender} from "../types";
 
 
 const PatientPage: React.FC = () => {
@@ -42,7 +42,16 @@ const PatientPage: React.FC = () => {
         }
     };
 
-    if (!patient) return null;
+    const getEntry = (entry: Entry) => (
+        <div key={entry.id}>
+            {`${entry.date} ${entry.description}`}
+            <ul>
+                {entry.diagnosisCodes?.map((dc: string) => <li key={dc}>{dc}</li>)}
+            </ul>
+        </div>
+    );
+
+    if (!patient || !patient.ssn) return null;
     return (
         <div className="App">
             <Header as="h1">
@@ -51,6 +60,8 @@ const PatientPage: React.FC = () => {
             </Header>
             {`ssn: ${patient.ssn}`}<br/>
             {`occupation: ${patient.occupation}`}
+            <Header as="h3">entries</Header>
+            {patient.entries.map(entry => getEntry(entry))}
         </div>
     );
 };
