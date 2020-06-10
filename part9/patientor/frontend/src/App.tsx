@@ -28,7 +28,7 @@ const App: React.FC = () => {
     const fetchDiagnoses = async () => {
       try {
         const { data: diagnoses } = await axios.get<Diagnosis[]>(
-            `${apiBaseUrl}/diagnoses`
+          `${apiBaseUrl}/diagnoses`
         );
         dispatch(setDiagnoses(diagnoses));
       } catch (e) {
