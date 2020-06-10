@@ -1,8 +1,8 @@
 import {v4 as uuidv4} from 'uuid';
-import {NewPatient, Patient, PublicPatient} from "../types";
+import {Entry, NewEntry, NewPatient, Patient, PublicPatient} from "../types";
 
 import patientData from '../../data/patients';
-import {toNewPatient} from "../utils";
+import {toNewPatient} from "../utils/patientUtils";
 
 const patients: Patient[] = patientData.map(obj => {
     const object = toNewPatient(obj) as Patient;
@@ -33,8 +33,20 @@ const addPatient = (patient: NewPatient): Patient => {
     return newPatient;
 };
 
+const addPatientEntry = (id: string, entry: NewEntry): Entry => {
+    const patient = patients.find(p => p.id === id);
+    if(!patient) {throw Error("Patient not found");}
+    const newEntry = {
+        id: uuidv4(),
+        ...entry
+    };
+    patient.entries.push(newEntry);
+    return newEntry;
+};
+
 export default {
     getAllPatients,
     getPatient,
-    addPatient
+    addPatient,
+    addPatientEntry
 };
