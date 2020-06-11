@@ -1,12 +1,14 @@
 import React, {useEffect} from "react";
 import {useHistory, useParams} from "react-router-dom";
-import {Header, Icon} from "semantic-ui-react";
+import {Button, Header, Icon} from "semantic-ui-react";
 import axios from "axios";
 
 import EntryDetails from "./EntryDetails";
 import {updatePatient, useStateValue} from "../state";
 import {apiBaseUrl} from "../constants";
-import {Gender} from "../types";
+import {Entry, Gender} from "../types";
+import {EntryFormValues} from "../AddEntryModal/AddEntryForm";
+import AddEntryModal from "../AddEntryModal";
 
 
 const PatientPage: React.FC = () => {
@@ -14,6 +16,31 @@ const PatientPage: React.FC = () => {
   const {id} = useParams<{ id: string }>();
   const [{patients}, dispatch] = useStateValue();
   const patient = patients[id];
+
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | undefined>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
+
+  const submitNewEntry = async (values: EntryFormValues) => {
+    try {
+      const { data: newEntry } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${id}/entries`,
+        values
+      );
+      const newPatient = {...patient, entries: patient.entries.concat(newEntry)};
+      dispatch(updatePatient(newPatient));
+      closeModal();
+    } catch (e) {
+      console.error(e.response.data);
+      setError(e.response.data.error);
+    }
+  };
 
   useEffect(() => {
     if (!patient || !patient.ssn) {
@@ -54,6 +81,13 @@ const PatientPage: React.FC = () => {
       {`occupation: ${patient.occupation}`}
       <Header as="h3">entries</Header>
       {patient.entries.map(entry => <EntryDetails key={entry.id} entry={entry}/> )}
+      <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewEntry}
+        error={error}
+        onClose={closeModal}
+      />
+      <Button onClick={() => openModal()}>Add New Entry</Button>
     </div>
   );
 };
