@@ -44,8 +44,8 @@ const parseDiagnosisCodes = (diagnosisCodes: any): Array<Diagnosis['code']> | un
 };
 
 const parseHealthCheckRating = (healthCheckRating: any): HealthCheckRating => {
-    if(!healthCheckRating || !isNumber(healthCheckRating) || !isHealthCheckRating(healthCheckRating)) {
-        throw new Error('Incorrect or missing diagnosis code');
+    if(!isNumber(healthCheckRating) || !isHealthCheckRating(healthCheckRating)) {
+        throw new Error('Incorrect or missing health check rating');
     }
     return healthCheckRating;
 };

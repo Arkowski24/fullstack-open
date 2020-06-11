@@ -17,6 +17,7 @@ interface Props {
 
 const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   const [{ diagnoses }] = useStateValue();
+  const isDate = (date: string) => Boolean(Date.parse(date));
 
   return (
     <Formik
@@ -31,12 +32,16 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
       onSubmit={onSubmit}
       validate={values => {
         const requiredError = "Field is required";
+        const dateError = "Date is invalid";
         const errors: { [field: string]: string } = {};
         if (!values.description) {
           errors.description = requiredError;
         }
         if (!values.date) {
           errors.date = requiredError;
+        }
+        if (!isDate(values.date)) {
+          errors.date = dateError;
         }
         if (!values.specialist) {
           errors.specialist = requiredError;
