@@ -1,18 +1,18 @@
 import React from "react";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
-import { Container, Table, Button } from "semantic-ui-react";
+import {Container, Table, Button} from "semantic-ui-react";
 
-import { PatientFormValues } from "../AddPatientModal/AddPatientForm";
+import {PatientFormValues} from "../AddPatientModal/AddPatientForm";
 import AddPatientModal from "../AddPatientModal";
-import { Patient } from "../types";
-import { apiBaseUrl } from "../constants";
+import {Patient} from "../types";
+import {apiBaseUrl} from "../constants";
 import HealthRatingBar from "../components/HealthRatingBar";
 import {addPatient, useStateValue} from "../state";
 
 const PatientListPage: React.FC = () => {
   const history = useHistory();
-  const [{ patients }, dispatch] = useStateValue();
+  const [{patients}, dispatch] = useStateValue();
 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
@@ -26,7 +26,7 @@ const PatientListPage: React.FC = () => {
 
   const submitNewPatient = async (values: PatientFormValues) => {
     try {
-      const { data: newPatient } = await axios.post<Patient>(
+      const {data: newPatient} = await axios.post<Patient>(
         `${apiBaseUrl}/patients`,
         values
       );
@@ -59,7 +59,7 @@ const PatientListPage: React.FC = () => {
               <Table.Cell>{patient.gender}</Table.Cell>
               <Table.Cell>{patient.occupation}</Table.Cell>
               <Table.Cell>
-                <HealthRatingBar showText={false} rating={1} />
+                <HealthRatingBar showText={false} rating={1}/>
               </Table.Cell>
             </Table.Row>
           ))}

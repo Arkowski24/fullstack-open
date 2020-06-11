@@ -7,7 +7,7 @@ import EntryDetails from "./EntryDetails";
 import {updatePatient, useStateValue} from "../state";
 import {apiBaseUrl} from "../constants";
 import {Entry, Gender} from "../types";
-import {EntryFormValues} from "../AddEntryModal/AddEntryForm";
+import {EntryFormValues} from "../AddEntryModal";
 import AddEntryModal from "../AddEntryModal";
 
 
@@ -29,7 +29,7 @@ const PatientPage: React.FC = () => {
 
   const submitNewEntry = async (values: EntryFormValues) => {
     try {
-      const { data: newEntry } = await axios.post<Entry>(
+      const {data: newEntry} = await axios.post<Entry>(
         `${apiBaseUrl}/patients/${id}/entries`,
         values
       );
@@ -80,7 +80,7 @@ const PatientPage: React.FC = () => {
       {`ssn: ${patient.ssn}`}<br/>
       {`occupation: ${patient.occupation}`}
       <Header as="h3">entries</Header>
-      {patient.entries.map(entry => <EntryDetails key={entry.id} entry={entry}/> )}
+      {patient.entries.map(entry => <EntryDetails key={entry.id} entry={entry}/>)}
       <AddEntryModal
         modalOpen={modalOpen}
         onSubmit={submitNewEntry}

@@ -5,7 +5,7 @@ import {Entry, HealthCheckEntry, HospitalEntry, OccupationalHealthcareEntry} fro
 import {useStateValue} from "../state";
 
 
-const DiagnosisCodes: React.FC<{entry: Entry}> = ({entry}) => {
+const DiagnosisCodes: React.FC<{ entry: Entry }> = ({entry}) => {
   const [{diagnoses}] = useStateValue();
 
   const getCodeDetail = (diagnosisCode: string) => (
@@ -14,10 +14,10 @@ const DiagnosisCodes: React.FC<{entry: Entry}> = ({entry}) => {
     </List.Item>
   );
 
-  if(!entry.diagnosisCodes) return null;
+  if (!entry.diagnosisCodes) return null;
   return (
     <div>
-      Diagnosis codes:
+            Diagnosis codes:
       <List bulleted>
         {entry.diagnosisCodes.map((dc: string) => getCodeDetail(dc))}
       </List>

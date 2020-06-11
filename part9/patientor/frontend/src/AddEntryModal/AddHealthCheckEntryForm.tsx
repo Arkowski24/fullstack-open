@@ -1,22 +1,21 @@
 import React from "react";
-import { Grid, Button } from "semantic-ui-react";
-import { Field, Formik, Form } from "formik";
+import {Grid, Button} from "semantic-ui-react";
+import {Field, Formik, Form} from "formik";
 
-import { TextField, NumberField } from "../AddPatientModal/FormField";
+import {TextField, NumberField} from "../AddPatientModal/FormField";
 import {HealthCheckEntry, HealthCheckRating} from "../types";
-import { DiagnosisSelection } from "../AddPatientModal/FormField";
-import { useStateValue } from "../state";
+import {DiagnosisSelection} from "../AddPatientModal/FormField";
+import {useStateValue} from "../state";
 
-type HealthCheckEntryFormValues = Omit<HealthCheckEntry, "id">;
-export type EntryFormValues = HealthCheckEntryFormValues;
+export type HealthCheckEntryFormValues = Omit<HealthCheckEntry, "id">;
 
-interface Props {
-    onSubmit: (values: EntryFormValues) => void;
+interface AddHealthCheckEntryFormProps {
+    onSubmit: (values: HealthCheckEntryFormValues) => void;
     onCancel: () => void;
 }
 
-const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
-  const [{ diagnoses }] = useStateValue();
+const AddHealthCheckEntryForm: React.FC<AddHealthCheckEntryFormProps> = ({onSubmit, onCancel}) => {
+  const [{diagnoses}] = useStateValue();
   const isDate = (date: string) => Boolean(Date.parse(date));
 
   return (
@@ -49,7 +48,7 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         return errors;
       }}
     >
-      {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
+      {({isValid, dirty, setFieldValue, setFieldTouched}) => {
 
         return (
           <Form className="form ui">
@@ -77,7 +76,7 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               diagnoses={Object.values(diagnoses)}
             />
             <Field
-              label="healthCheckRating"
+              label="Health Check Rating"
               name="healthCheckRating"
               component={NumberField}
               min={0}
@@ -107,4 +106,4 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   );
 };
 
-export default AddEntryForm;
+export default AddHealthCheckEntryForm;

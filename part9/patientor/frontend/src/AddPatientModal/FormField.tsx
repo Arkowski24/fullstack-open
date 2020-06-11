@@ -1,19 +1,19 @@
 import React from "react";
-import { ErrorMessage, Field, FieldProps, FormikProps } from "formik";
-import { Dropdown, DropdownProps, Form } from "semantic-ui-react";
-import { Diagnosis, Gender } from "../types";
+import {ErrorMessage, Field, FieldProps, FormikProps} from "formik";
+import {Dropdown, DropdownProps, Form} from "semantic-ui-react";
+import {Diagnosis, Gender} from "../types";
 
 // structure of a single option
 export type GenderOption = {
-  value: Gender;
-  label: string;
+    value: Gender;
+    label: string;
 };
 
 // props for select field component
 type SelectFieldProps = {
-  name: string;
-  label: string;
-  options: GenderOption[];
+    name: string;
+    label: string;
+    options: GenderOption[];
 };
 
 export const SelectField: React.FC<SelectFieldProps> = ({
@@ -34,8 +34,8 @@ export const SelectField: React.FC<SelectFieldProps> = ({
 );
 
 interface TextProps extends FieldProps {
-  label: string;
-  placeholder: string;
+    label: string;
+    placeholder: string;
 }
 
 export const TextField: React.FC<TextProps> = ({
@@ -46,8 +46,8 @@ export const TextField: React.FC<TextProps> = ({
   <Form.Field>
     <label>{label}</label>
     <Field placeholder={placeholder} {...field} />
-    <div style={{ color:'red' }}>
-      <ErrorMessage name={field.name} />
+    <div style={{color: 'red'}}>
+      <ErrorMessage name={field.name}/>
     </div>
   </Form.Field>
 );
@@ -56,19 +56,19 @@ export const TextField: React.FC<TextProps> = ({
   for exercises 9.24.-
 */
 interface NumberProps extends FieldProps {
-  label: string;
-  errorMessage?: string;
-  min: number;
-  max: number;
+    label: string;
+    errorMessage?: string;
+    min: number;
+    max: number;
 }
 
-export const NumberField: React.FC<NumberProps> = ({ field, label, min, max }) => (
+export const NumberField: React.FC<NumberProps> = ({field, label, min, max}) => (
   <Form.Field>
     <label>{label}</label>
-    <Field {...field} type='number' min={min} max={max} />
+    <Field {...field} type='number' min={min} max={max}/>
 
-    <div style={{ color:'red' }}>
-      <ErrorMessage name={field.name} />
+    <div style={{color: 'red'}}>
+      <ErrorMessage name={field.name}/>
     </div>
   </Form.Field>
 );
@@ -78,9 +78,9 @@ export const DiagnosisSelection = ({
   setFieldValue,
   setFieldTouched
 }: {
-  diagnoses: Diagnosis[];
-  setFieldValue: FormikProps<{ diagnosisCodes: string[] }>["setFieldValue"];
-  setFieldTouched: FormikProps<{ diagnosisCodes: string[] }>["setFieldTouched"];
+    diagnoses: Diagnosis[];
+    setFieldValue: FormikProps<{ diagnosisCodes: string[] }>["setFieldValue"];
+    setFieldTouched: FormikProps<{ diagnosisCodes: string[] }>["setFieldTouched"];
 }) => {
   const field = "diagnosisCodes";
   const onChange = (
@@ -108,7 +108,7 @@ export const DiagnosisSelection = ({
         options={stateOptions}
         onChange={onChange}
       />
-      <ErrorMessage name={field} />
+      <ErrorMessage name={field}/>
     </Form.Field>
   );
 };
